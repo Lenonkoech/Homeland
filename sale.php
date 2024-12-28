@@ -87,11 +87,11 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
           <div class="ml-auto d-flex align-items-center">
             <div>
               <a href="<?php APPURL; ?>index.php" class="view-list px-3 border-right active">All</a>
-              <a href="<?php APPURL; ?>rent.php?type=rent" class="view-list px-3 border-right">Rent</a>
-              <a href="<?php APPURL; ?>sale.php?type=sale" class="view-list px-3 border-right">Sale</a>
-              <a href="<?php APPURL; ?>lease.php?type=lease" class="view-list px-3 border-right">Lease</a>
-              <a href="<?php APPURL; ?>price.php?price=ASC" class="view-list px-3 border-right">Price Ascending</a>
-              <a href="<?php APPURL; ?>price.php?price=DESC" class="view-list px-3">Price Descending</a>
+                <a href="<?php APPURL; ?>rent.php?type=rent" class="view-list px-3 border-right">Rent</a>
+                <a href="<?php APPURL; ?>sale.php?type=sale" class="view-list px-3 border-right">Sale</a>
+                <a href="<?php APPURL; ?>lease.php?type=lease" class="view-list px-3 border-right">Lease</a>
+                <a href="<?php APPURL; ?>price.php?price=ASC" class="view-list px-3 border-right">Price Ascending</a>
+                <a href="<?php APPURL; ?>price.php?price=DESC" class="view-list px-3">Price Descending</a>
             </div>
           </div>
         </div>

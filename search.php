@@ -5,14 +5,16 @@ $select = $conn->query("SELECT * from props");
 $select->execute();
 $props = $select->fetchAll(PDO::FETCH_OBJ);
 
-if (isset($_GET["home_type"])) {
-  $home_type = $_GET["home_type"];
+if (isset($_POST["submit"])) {
+  $types = $_POST["types"];
+  $offers = $_POST["offers"];
+  $cities = $_POST["cities"];
+
+  $search = $conn->query("SELECT * FROM props where home_type LIKE '%$types%' OR type LIKE '%$offers' OR location LIKE '%$cities%'");
+  $search->execute();
+
+  $listings = $search->fetchAll(PDO::FETCH_OBJ);
 }
-$search = $conn->query("SELECT * FROM props where home_type LIKE '%$home_type%'");
-$search->execute();
-
-$listings = $search->fetchAll(PDO::FETCH_OBJ);
-
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">

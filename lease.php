@@ -1,18 +1,12 @@
 <?php require "includes/header.php" ?>
 <?php require "config/config.php" ?>
 <?php
-$select = $conn->query("SELECT * from props");
+if (isset($_GET["type"])) {
+  $type = $_GET["type"];
+}
+$select = $conn->query("SELECT * from props where type='$type'");
 $select->execute();
 $props = $select->fetchAll(PDO::FETCH_OBJ);
-
-if (isset($_GET["home_type"])) {
-  $home_type = $_GET["home_type"];
-}
-$search = $conn->query("SELECT * FROM props where home_type LIKE '%$home_type%'");
-$search->execute();
-
-$listings = $search->fetchAll(PDO::FETCH_OBJ);
-
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">
@@ -29,10 +23,9 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
                                             } else {
                                               echo "info";
                                             } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
-            <h1 class="mb-2"><?php echo $prop->name; ?>
-            </h1>
+            <h1 class="mb-2"><?php echo $prop->name; ?></h1>
             <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
-            <p><a href="<?php APPURL; ?>properties.php?id=<?php echo $prop->id; ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+            <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
           </div>
         </div>
       </div>
@@ -50,7 +43,7 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
             <label for="list-types">Listing Types</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="types" id="list-types" class="form-control d-block rounded-0">
+              <select name="list-types" id="list-types" class="form-control d-block rounded-0">
                 <option value="condo">Condo</option>
                 <option value="commercial building">Commercial Building</option>
                 <option value="land property">Land Property</option>
@@ -61,10 +54,10 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
             <label for="offer-types">Offer Type</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="offers" id="offers" class="form-control d-block rounded-0">
-                <option value="sale">For Sale</option>
-                <option value="rent">For Rent</option>
-                <option value="lease">For Lease</option>
+              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
+                <option value="sale">Sale</option>
+                <option value="rent">Rent</option>
+                <option value="lease">Lease</option>
               </select>
             </div>
           </div>
@@ -72,7 +65,7 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
             <label for="select-city">Select City</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="cities" id="select-city" class="form-control d-block rounded-0">
+              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
                 <option value="new york">New York</option>
                 <option value="brooklyn">Brooklyn</option>
                 <option value="london">London</option>
@@ -93,7 +86,7 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
         <div class="view-options bg-white py-3 px-3 d-md-flex align-items-center">
           <div class="ml-auto d-flex align-items-center">
             <div>
-              <a href="<?php APPURL; ?>index.php" class="view-list px-3 border-right active">All</a>
+            <a href="<?php APPURL?>index.php" class="view-list px-3 border-right active">All</a>
               <a href="<?php APPURL; ?>rent.php?type=rent" class="view-list px-3 border-right">Rent</a>
               <a href="<?php APPURL; ?>sale.php?type=sale" class="view-list px-3 border-right">Sale</a>
               <a href="<?php APPURL; ?>lease.php?type=lease" class="view-list px-3 border-right">Lease</a>
@@ -112,53 +105,48 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
   <div class="container">
 
     <div class="row mb-5">
-      <?php if (count($listings) > 0): ?>
-        <?php foreach ($listings as $listing): ?>
-          <div class="col-md-6 col-lg-4 mb-4">
-            <div class="property-entry h-100">
-              <a href="property-details.php" class="property-thumbnail">
-                <div class="offer-type-wrap">
-                  <span class="offer-type bg-<?php if ($listing->type == "rent") {
-                                                echo "success";
-                                              } else if ($listing->type == "sale") {
-                                                echo "danger";
-                                              } else {
-                                                echo "info";
-                                              } ?>"><?php echo $listing->type; ?></span>
-                </div>
-                <img src="images/<?php echo $listing->image; ?>" alt="Image" class="img-fluid">
-              </a>
-              <div class="p-4 property-body">
-                <h2 class="property-title"><a href="property-details.html?id=<?php echo $listing->id; ?>"><?php echo $listing->name; ?></a></h2>
-                <span class="property-location d-block mb-3"><span class="property-icon icon-room"><?php echo $listing->location; ?></span>
-                  <strong class="property-price text-primary mb-3 d-block text-success"><?php echo $listing->price; ?></strong>
-                  <ul class="property-specs-wrap mb-3 mb-lg-0">
-                    <li>
-                      <span class="property-specs">Beds</span>
-                      <span class="property-specs-number"><?php echo $listing->beds; ?><sup>+</sup></span>
-
-                    </li>
-                    <li>
-                      <span class="property-specs">Baths</span>
-                      <span class="property-specs-number"><?php echo $listing->baths; ?></span>
-
-                    </li>
-                    <li>
-                      <span class="property-specs">SQ FT</span>
-                      <span class="property-specs-number"><?php echo $listing->sqft; ?></span>
-
-                    </li>
-                  </ul>
-
+      <?php foreach ($props as $prop) : ?>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="property-entry h-100">
+            <a href="property-details.php?id=<?php echo $prop->id ?>" class="property-thumbnail">
+              <div class="offer-type-wrap">
+                <span class="offer-type bg-<?php if ($prop->type == "rent") {
+                                              echo "success";
+                                            } else if ($prop->type == "sale") {
+                                              echo "danger";
+                                            } else {
+                                              echo "info";
+                                            } ?>"><?php echo $prop->type; ?></span>
               </div>
+              <img src="images/<?php echo $prop->image; ?>" alt="Image" class="img-fluid">
+            </a>
+            <div class="p-4 property-body">
+              <h2 class="property-title"><a href="property-details.php?id=<?php echo $prop->id ?>"><?php echo $prop->name; ?></a></h2>
+              <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span>
+                <?php echo $prop->location; ?></span>
+              <strong class="property-price text-primary mb-3 d-block text-success">$<?php echo $prop->price; ?></strong>
+              <ul class="property-specs-wrap mb-3 mb-lg-0">
+                <li>
+                  <span class="property-specs">Beds</span>
+                  <span class="property-specs-number"><?php echo $prop->beds; ?> <sup>+</sup></span>
+
+                </li>
+                <li>
+                  <span class="property-specs">Baths</span>
+                  <span class="property-specs-number"><?php echo $prop->baths ?></span>
+
+                </li>
+                <li>
+                  <span class="property-specs">SQ FT</span>
+                  <span class="property-specs-number"><?php echo $prop->sqft; ?></span>
+
+                </li>
+              </ul>
+
             </div>
           </div>
-        <?php endforeach; ?>
-      <?php else : ?>
-        <div class="bg-success text-white px-3">
-          No property found !!!
         </div>
-      <?php endif; ?>
+      <?php endforeach; ?>
     </div>
 
 

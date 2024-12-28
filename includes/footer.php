@@ -20,16 +20,16 @@ define("APPURL", 'http://localhost/homeland/');
             <div class="col-md-6 col-lg-6">
               <ul class="list-unstyled">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="buy.php">Buy</a></li>
-                <li><a href="rent.php">Rent</a></li>
-                <li><a href="properties.php">Properties</a></li>
+                <li><a href="<?php echo APPURL;?>sale.php?type=sale">Buy</a></li>
+                <li><a href="<?php echo APPURL;?>rent.php?type=rent">Rent</a></li>
+                <li><a href="<?php echo APPURL;?>properties.php">Properties</a></li>
               </ul>
             </div>
             <div class="col-md-6 col-lg-6">
               <ul class="list-unstyled">
-                <li><a href="#">About Us</a></li>
+                <li><a href="<?php echo APPURL;?>about.php">About Us</a></li>
                 <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="<?php echo APPURL;?>contact.php">Contact Us</a></li>
                 <li><a href="#">Terms</a></li>
               </ul>
             </div>
