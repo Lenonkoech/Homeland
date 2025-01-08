@@ -21,7 +21,8 @@ if (isset($_POST['submit'])) {
       ':mypassword' => password_hash($password, PASSWORD_DEFAULT)
     ]);
 
-    header("location: login.php");
+    // header("location: login.php");
+    echo "<script>window.location.href='" . APPURL . "'</script>";
   }
 }
 

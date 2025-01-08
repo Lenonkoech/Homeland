@@ -15,6 +15,13 @@ if (isset($_GET["id"])) {
   $relatedProps = $conn->query("SELECT * from props where home_type='$allDetails->home_type' and id != '$id'");
   $relatedProps->execute();
   $RelatedProp = $relatedProps->fetchAll(PDO::FETCH_OBJ);
+
+
+  //check if prop is added to favorites by user
+  $user_id = $_SESSION['user_id'];
+  $check = $conn->query("SELECT * FROM fav WHERE prop_id = '$id' AND user_id = '$user_id'");
+  $check->execute();
+  $fetch_check = $check->fetch(PDO::FETCH_OBJ);
 }
 ?>
 <div class="slide-one-item home-slider owl-carousel">
@@ -143,6 +150,30 @@ if (isset($_GET["id"])) {
                 class="icon-linkedin"></span></a>
           </div>
         </div>
+        <div class="bg-white widget border rounded">
+          <h3 class="h4 text-black widget-title mb-3 ml-0">Add to Favorites</h3>
+          <div class="px-3" style="margin-left: -15px;">
+            <form action="favs/add-fav.php" method="POST" class="form-contact-agent">
+              <div class="form-group">
+                <!-- <label for="name">prop_id</label> -->
+                <input type="hidden" id="name" name="prop_id" value="<?php echo $id; ?>" class="form-control">
+              </div>
+              <div class="form-group">
+                <!-- <label for="email">user_id</label> -->
+                <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" class="form-control">
+              </div>
+              <?php if ($check->rowCount() > 0) : ?>
+                <div class="form-group">
+                  <a href="favs/delete-fav.php?prop_id=<?php echo $id ?>&user_id=<?php echo $_SESSION['user_id'] ?>" class="btn btn-primary">Added to Favorites</a>
+                </div>
+              <?php else: ?>
+                <div class="form-group">
+                  <input type="submit" class="btn btn-primary" name="submit" value="Add to Favorites">
+                </div>
+              <?php endif ?>
+            </form>
+          </div>
+        </div>
 
       </div>
 
@@ -162,49 +193,49 @@ if (isset($_GET["id"])) {
     </div>
 
     <div class="row mb-5">
-      <?php if(count($RelatedProp)>0):?>
-      <?php foreach ($RelatedProp as $relatedproperty): ?>
-        <div class="col-md-6 col-lg-4 mb-4">
-          <div class="property-entry h-100">
-            <a href="property-details.php?id=<?php echo $relatedproperty->id;?>" class="property-thumbnail">
-              <div class="offer-type-wrap">
-                <span class="offer-type bg-<?php if ($relatedproperty->type == "rent") {
-                                              echo "success";
-                                            } else if ($relatedproperty->type == "sale") {
-                                              echo "danger";
-                                            } else {
-                                              echo "info";
-                                            } ?>"><?php echo $relatedproperty->type;?></span>
+      <?php if (count($RelatedProp) > 0): ?>
+        <?php foreach ($RelatedProp as $relatedproperty): ?>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="property-entry h-100">
+              <a href="property-details.php?id=<?php echo $relatedproperty->id; ?>" class="property-thumbnail">
+                <div class="offer-type-wrap">
+                  <span class="offer-type bg-<?php if ($relatedproperty->type == "rent") {
+                                                echo "success";
+                                              } else if ($relatedproperty->type == "sale") {
+                                                echo "danger";
+                                              } else {
+                                                echo "info";
+                                              } ?>"><?php echo $relatedproperty->type; ?></span>
+                </div>
+                <img src="images/<?php echo $relatedproperty->image; ?>" alt="Image" class="img-fluid">
+              </a>
+              <div class="p-4 property-body">
+                <a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>
+                <h2 class="property-title"><a href="property-details.php?id=<?php echo $relatedproperty->id; ?>"><?php echo $relatedproperty->name; ?></a></h2>
+                <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $relatedproperty->location; ?></span>
+                <strong class="property-price text-primary mb-3 d-block text-success">$2,265,500</strong>
+                <ul class="property-specs-wrap mb-3 mb-lg-0">
+                  <li>
+                    <span class="property-specs">Beds</span>
+                    <span class="property-specs-number"><?php echo $relatedproperty->beds; ?><sup>+</sup></span>
+
+                  </li>
+                  <li>
+                    <span class="property-specs">Baths</span>
+                    <span class="property-specs-number"><?php echo $relatedproperty->baths; ?></span>
+
+                  </li>
+                  <li>
+                    <span class="property-specs">SQ FT</span>
+                    <span class="property-specs-number"><?php echo $relatedproperty->sqft; ?></span>
+
+                  </li>
+                </ul>
+
               </div>
-              <img src="images/<?php echo $relatedproperty->image;?>" alt="Image" class="img-fluid">
-            </a>
-            <div class="p-4 property-body">
-              <a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>
-              <h2 class="property-title"><a href="property-details.php?id=<?php echo $relatedproperty->id;?>"><?php echo $relatedproperty->name;?></a></h2>
-              <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $relatedproperty->location;?></span>
-              <strong class="property-price text-primary mb-3 d-block text-success">$2,265,500</strong>
-              <ul class="property-specs-wrap mb-3 mb-lg-0">
-                <li>
-                  <span class="property-specs">Beds</span>
-                  <span class="property-specs-number"><?php echo $relatedproperty->beds;?><sup>+</sup></span>
-
-                </li>
-                <li>
-                  <span class="property-specs">Baths</span>
-                  <span class="property-specs-number"><?php echo $relatedproperty->baths;?></span>
-
-                </li>
-                <li>
-                  <span class="property-specs">SQ FT</span>
-                  <span class="property-specs-number"><?php echo $relatedproperty->sqft;?></span>
-
-                </li>
-              </ul>
-
             </div>
           </div>
-        </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
       <?php else : ?>
         <div class="bg-success text-white px-3">
           No Related property found !!!
