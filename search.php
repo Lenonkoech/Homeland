@@ -34,7 +34,7 @@ if (isset($_POST["submit"])) {
             <h1 class="mb-2"><?php echo $prop->name; ?>
             </h1>
             <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
-            <p><a href="<?php APPURL; ?>properties.php?id=<?php echo $prop->id; ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+            <p><a href="<?php APPURL; ?>property-details.php?id=<?php echo $prop->id; ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
           </div>
         </div>
       </div>
@@ -53,9 +53,9 @@ if (isset($_POST["submit"])) {
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="types" id="list-types" class="form-control d-block rounded-0">
-                <option value="condo">Condo</option>
-                <option value="commercial building">Commercial Building</option>
-                <option value="land property">Land Property</option>
+                <?php foreach ($categories as $category) : ?>
+                  <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>
@@ -156,7 +156,7 @@ if (isset($_POST["submit"])) {
             </div>
           </div>
         <?php endforeach; ?>
-      <?php else : ?>
+        <?php else : ?>
         <div class="bg-success text-white px-3">
           No property found !!!
         </div>

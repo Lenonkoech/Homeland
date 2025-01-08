@@ -44,9 +44,9 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                <option value="condo">Condo</option>
-                <option value="commercial building">Commercial Building</option>
-                <option value="land property">Land Property</option>
+              <?php foreach ($categories as $category) : ?>
+                  <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>

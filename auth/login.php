@@ -23,7 +23,8 @@ if (isset($_POST["submit"])) {
         $_SESSION['username'] = $fetch['username'];
         $_SESSION['email'] = $fetch['email'];
         $_SESSION['user_id'] = $fetch['id'];
-        header("location:" . APPURL . "");
+       // header("location:" . APPURL . "");
+       echo "<script>window.location.href='".APPURL."'</script>";
       } else {
         echo "<script>alert('Wrong email or password')</script";
       }

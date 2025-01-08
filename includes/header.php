@@ -1,6 +1,12 @@
 <?php
 session_start();
 define("APPURL", 'http://localhost/homeland/');
+require dirname(dirname(__FILE__)) . '/config/config.php';
+
+$select = $conn->query("SELECT * from categories");
+$select->execute();
+$categories = $select->fetchAll(PDO::FETCH_OBJ);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,23 +20,24 @@ define("APPURL", 'http://localhost/homeland/');
     href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
   <link rel="stylesheet" href="fonts/icomoon/style.css">
 
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/bootstrap.min.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/magnific-popup.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/jquery-ui.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/owl.carousel.min.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/owl.theme.default.min.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/bootstrap-datepicker.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/mediaelementplayer.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/animate.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>fonts/flaticon/font/flaticon.css">
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/fl-bigmug-line.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/magnific-popup.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/jquery-ui.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/owl.carousel.min.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/owl.theme.default.min.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/bootstrap-datepicker.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/mediaelementplayer.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/animate.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>fonts/flaticon/font/flaticon.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/fl-bigmug-line.css">
 
 
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/aos.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/aos.css">
 
-  <link rel="stylesheet" href="<?php echo APPURL ; ?>css/style.css">
+  <link rel="stylesheet" href="<?php echo APPURL; ?>css/style.css">
 
 </head>
+
 <body>
 
   <div class="site-loader"></div>
@@ -61,34 +68,33 @@ define("APPURL", 'http://localhost/homeland/');
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="<?php echo APPURL;?>index.php">Home</a>
+                  <a href="<?php echo APPURL; ?>index.php">Home</a>
                 </li>
-                <li><a href="<?php echo APPURL;?>sale.php?type=sale">Buy</a></li>
-                <li><a href="<?php echo APPURL;?>rent.php?type=rent">Rent</a></li>
+                <li><a href="<?php echo APPURL; ?>sale.php?type=sale">Buy</a></li>
+                <li><a href="<?php echo APPURL; ?>rent.php?type=rent">Rent</a></li>
                 <li class="has-children">
-                  <a href="<?php echo APPURL;?>properties.php">Properties</a>
+                  <a href="<?php echo APPURL; ?>properties.php">Properties</a>
                   <ul class="dropdown arrow-top">
-                    <li><a href="<?php echo APPURL;?>properties.php?home_type=condo">Condo</a></li>
-                    <li><a href="<?php echo APPURL;?>properties.php?home_type=property">Property Land</a></li>
-                    <li><a href="<?php echo APPURL;?>properties.php?home_type=commercial">Commercial Building</a></li>
-
+                    <?php foreach ($categories as $category) : ?>
+                      <li><a href="<?php echo APPURL; ?>properties.php?home_type=<?php echo str_replace(' ', '-', $category->name); ?>"><?php echo $category->name; ?></a></li>
+                    <?php endforeach; ?>
                   </ul>
                 </li>
-                <li><a href="<?php echo APPURL;?>about.php">About</a></li>
-                <li><a href="<?php echo APPURL;?>contact.php">Contact</a></li>
+                <li><a href="<?php echo APPURL; ?>about.php">About</a></li>
+                <li><a href="<?php echo APPURL; ?>contact.php">Contact</a></li>
 
-                 <?php if(isset($_SESSION['username'])) :?> 
+                <?php if (isset($_SESSION['username'])) : ?>
 
-                <li class="has-children">
-                  <a href="#"><?php echo $_SESSION['username']?><?php echo"&nbsp&nbsp&nbsp";?></a>
-                  <ul class="dropdown arrow-top">
-                    <li><a href="<?php echo APPURL;?>/auth/logout.php">Logout</a></li> 
-                  </ul>
-                </li>
-              <?php else : ?>
-                <li><a href="<?php echo APPURL;?>auth/login.php">Login</a></li>
-                <li><a href="<?php echo APPURL;?>auth/register.php">Register</a></li>
-              <?php endif ; ?>
+                  <li class="has-children">
+                    <a href="#"><?php echo $_SESSION['username'] ?><?php echo "&nbsp&nbsp&nbsp"; ?></a>
+                    <ul class="dropdown arrow-top">
+                      <li><a href="<?php echo APPURL; ?>/auth/logout.php">Logout</a></li>
+                    </ul>
+                  </li>
+                <?php else : ?>
+                  <li><a href="<?php echo APPURL; ?>auth/login.php">Login</a></li>
+                  <li><a href="<?php echo APPURL; ?>auth/register.php">Register</a></li>
+                <?php endif; ?>
               </ul>
             </nav>
           </div>
@@ -97,4 +103,4 @@ define("APPURL", 'http://localhost/homeland/');
         </div>
       </div>
     </div>
- </div>
+  </div>

@@ -1,11 +1,10 @@
 <?php require "includes/header.php" ?>
 <?php require "config/config.php" ?>
-<?php
+<?php 
+
 $select = $conn->query("SELECT * from props");
 $select->execute();
-$props = $select->fetchAll(PDO::FETCH_OBJ);
-
-?>
+$props = $select->fetchAll(PDO::FETCH_OBJ);?>
 
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
@@ -42,9 +41,9 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                <option value="condo">Condo</option>
-                <option value="commercial building">Commercial Building</option>
-                <option value="land property">Land Property</option>
+              <?php foreach ($categories as $category) : ?>
+                  <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
+                <?php endforeach; ?>
               </select>
             </div>
           </div>
@@ -200,49 +199,6 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
     </div>
   </div>
 </div>
-
-<!-- <div class="site-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5">
-          <div class="col-md-7 text-center">
-            <div class="site-section-title">
-              <h2>Recent Blog</h2>
-            </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis maiores quisquam saepe architecto error corporis aliquam. Cum ipsam a consectetur aut sunt sint animi, pariatur corporis, eaque, deleniti cupiditate officia.</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="100">
-            <a href="#"><img src="images/img_4.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="200">
-            <a href="#"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="300">
-            <a href="#"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt.</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </div> -->
-
-
 <div class="site-section bg-light">
   <div class="container">
     <div class="row mb-5 justify-content-center">

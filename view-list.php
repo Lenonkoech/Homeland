@@ -7,34 +7,27 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
 
 ?>
 <div class="slide-one-item home-slider owl-carousel">
-
-  <div class="site-blocks-cover overlay" style="background-image: url(images/hero_bg_1.jpg);" data-aos="fade"
-    data-stellar-background-ratio="0.5">
-    <div class="container">
-      <div class="row align-items-center justify-content-center text-center">
-        <div class="col-md-10">
-          <span class="d-inline-block bg-success text-white px-3 mb-3 property-offer-type rounded">For Rent</span>
-          <h1 class="mb-2">871 Crenshaw Blvd</h1>
-          <p class="mb-5"><strong class="h2 text-success font-weight-bold">$2,250,500</strong></p>
-          <p><a href="#" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+  <?php foreach ($props as $prop) : ?>
+    <div class="site-blocks-cover overlay" style="background-image: url(images/<?php echo $prop->image; ?>);" data-aos="fade"
+      data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+          <div class="col-md-10">
+            <span class="d-inline-block bg-<?php if ($prop->type == "rent") {
+                                              echo "success";
+                                            } else if ($prop->type == "sale") {
+                                              echo "danger";
+                                            } else {
+                                              echo "info";
+                                            } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
+            <h1 class="mb-2"><?php echo $prop->name; ?></h1>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
+            <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="site-blocks-cover overlay" style="background-image: url(images/hero_bg_2.jpg);" data-aos="fade"
-    data-stellar-background-ratio="0.5">
-    <div class="container">
-      <div class="row align-items-center justify-content-center text-center">
-        <div class="col-md-10">
-          <span class="d-inline-block bg-danger text-white px-3 mb-3 property-offer-type rounded">For Sale</span>
-          <h1 class="mb-2">625 S. Berendo St</h1>
-          <p class="mb-5"><strong class="h2 text-success font-weight-bold">$1,000,500</strong></p>
-          <p><a href="#" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <?php endforeach; ?>
 </div>
 
 
@@ -48,9 +41,9 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                <option value="condo">Condo</option>
-                <option value="commercial building">Commercial Building</option>
-                <option value="land property">Land Property</option>
+              <?php foreach ($categories as $category) : ?>
+                  <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
+                <?php endforeach; ?>n>
               </select>
             </div>
           </div>
@@ -118,7 +111,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <div class="col-md-12">
           <div class="property-entry horizontal d-lg-flex">
 
-            <a href="#" class="property-thumbnail h-100">
+            <a href="<?php APPURL?>property-details.php?id=<?php echo $prop->id;?>" class="property-thumbnail h-100">
               <div class="offer-type-wrap">
                 <span class="offer-type bg-<?php if ($prop->type == "rent") {
                                               echo "success";
@@ -132,7 +125,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             </a>
 
             <div class="p-4 property-body">
-              <h2 class="property-title"><a href="#"><?php echo $prop->name; ?></a></h2>
+              <h2 class="property-title"><a href="<?php APPURL?>property-details.php?id=<?php echo $prop->id;?>"><?php echo $prop->name; ?></a></h2>
               <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $prop->location ?></span>
               <strong class="property-price text-primary mb-3 d-block text-success">$<?php echo $prop->price ?></strong>
               <p><?php echo $prop->description ?></p>
