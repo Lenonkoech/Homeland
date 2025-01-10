@@ -2,6 +2,9 @@
 <?php require "../config/config.php" ?>
 
 <?php
+if (!isset($_SESSION['username'])) {
+    echo "<script>window.location.href='" . APPURL . "'</script>";
+}
 $fav = $conn->query("SELECT props.id as id,props.name as name, props.location as location,props.image as image,props.beds as beds,props.price as price,props.baths as baths,props.sqft as sqft,props.type as type FROM props JOIN fav on props.id =fav.prop_id where fav.user_id = $_SESSION[user_id]");
 $fav->execute();
 $props = $fav->fetchAll(PDO::FETCH_OBJ);

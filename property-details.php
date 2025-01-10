@@ -21,8 +21,9 @@ if (isset($_GET["id"])) {
   $relatedProps = $conn->query("SELECT * from props where home_type='$allDetails->home_type' and id != '$id'");
   $relatedProps->execute();
   $RelatedProp = $relatedProps->fetchAll(PDO::FETCH_OBJ);
+} else {
+  echo "<script>window.location.href='" . APPURL . "404.php'</script>";
 }
-
 if (isset($_SESSION['user_id'])) {
   //check if prop is added to favorites by user
   $user_id = $_SESSION['user_id'];

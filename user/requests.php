@@ -2,9 +2,12 @@
 <?php require "../config/config.php" ?>
 
 <?php
-$fav = $conn->query("SELECT props.id as id,props.name as name, props.location as location,props.image as image,props.beds as beds,props.price as price,props.baths as baths,props.sqft as sqft,props.type as type FROM props JOIN requests on props.id =requests.prop_id where requests.user_id = $_SESSION[user_id]");
-$fav->execute();
-$props = $fav->fetchAll(PDO::FETCH_OBJ);
+if (!isset($_SESSION['username'])) {
+    echo "<script>window.location.href='" . APPURL . "'</script>";
+}
+$requests = $conn->query("SELECT props.id as id,props.name as name, props.location as location,props.image as image,props.beds as beds,props.price as price,props.baths as baths,props.sqft as sqft,props.type as type FROM props JOIN requests on props.id =requests.prop_id where requests.user_id = $_SESSION[user_id]");
+$requests->execute();
+$props = $requests->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <div class="site-blocks-cover inner-page-cover overlay" style="background-image: url(<?php echo APPURL; ?>images/hero_bg_2.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">

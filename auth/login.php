@@ -1,6 +1,9 @@
 <?php require "../includes/header.php" ?>
 <?php require "../config/config.php" ?>
 <?php
+if (isset($_SESSION['username'])) {
+  echo "<script>window.location.href='" . APPURL . "'</script>";
+}
 if (isset($_POST["submit"])) {
   if (empty($_POST['email']) or empty($_POST['password'])) {
     echo "<script>alert('Fill in all fields')</script";
@@ -18,8 +21,8 @@ if (isset($_POST["submit"])) {
         $_SESSION['username'] = $fetch['username'];
         $_SESSION['email'] = $fetch['email'];
         $_SESSION['user_id'] = $fetch['id'];
-       // header("location:" . APPURL . "");
-       echo "<script>window.location.href='".APPURL."'</script>";
+        // header("location:" . APPURL . "");
+        echo "<script>window.location.href='" . APPURL . "'</script>";
       } else {
         echo "<script>alert('Wrong email or password')</script";
       }

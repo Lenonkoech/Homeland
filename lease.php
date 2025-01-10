@@ -3,10 +3,12 @@
 <?php
 if (isset($_GET["type"])) {
   $type = $_GET["type"];
+  $select = $conn->query("SELECT * from props where type='$type'");
+  $select->execute();
+  $props = $select->fetchAll(PDO::FETCH_OBJ);
+} else {
+  echo "<script>window.location.href='" . APPURL . "404.php'</script>";
 }
-$select = $conn->query("SELECT * from props where type='$type'");
-$select->execute();
-$props = $select->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">
@@ -44,9 +46,9 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-              <?php foreach ($categories as $category) : ?>
+                <?php foreach ($categories as $category) : ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
-                <?php endforeach; ?>tion>
+                  <?php endforeach; ?>tion>
               </select>
             </div>
           </div>
@@ -86,7 +88,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <div class="view-options bg-white py-3 px-3 d-md-flex align-items-center">
           <div class="ml-auto d-flex align-items-center">
             <div>
-            <a href="<?php APPURL?>index.php" class="view-list px-3 border-right active">All</a>
+              <a href="<?php APPURL ?>index.php" class="view-list px-3 border-right active">All</a>
               <a href="<?php APPURL; ?>rent.php?type=rent" class="view-list px-3 border-right">Rent</a>
               <a href="<?php APPURL; ?>sale.php?type=sale" class="view-list px-3 border-right">Sale</a>
               <a href="<?php APPURL; ?>lease.php?type=lease" class="view-list px-3 border-right">Lease</a>

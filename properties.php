@@ -8,11 +8,14 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
 if (isset($_GET["home_type"])) {
   $home_type_get = $_GET["home_type"];
   $home_type = str_replace('-', ' ', $home_type_get);
-}
-$search = $conn->query("SELECT * FROM props where home_type LIKE '%$home_type%'");
-$search->execute();
+  $search = $conn->query("SELECT * FROM props where home_type LIKE '%$home_type%'");
+  $search->execute();
 
-$listings = $search->fetchAll(PDO::FETCH_OBJ);
+  $listings = $search->fetchAll(PDO::FETCH_OBJ);
+} else {
+  echo "<script>window.location.href='" . APPURL . "404.php'</script>";
+}
+
 
 ?>
 
@@ -52,7 +55,7 @@ $listings = $search->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="types" id="list-types" class="form-control d-block rounded-0">
-              <?php foreach ($categories as $category) : ?>
+                <?php foreach ($categories as $category) : ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>

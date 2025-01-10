@@ -1,7 +1,9 @@
 <?php require "../includes/header.php" ?>
 <?php require "../config/config.php" ?>
 <?php
-
+if (!isset($_SESSION['username'])) {
+    echo "<script>window.location.href='" . APPURL . "'</script>";
+}
 if (isset($_POST['submit'])) {
     $prop_id = $_POST['prop_id'];
     $user_id = $_POST['user_id'];

@@ -3,10 +3,13 @@
 <?php
 if (isset($_GET["type"])) {
   $type = $_GET["type"];
+  $select = $conn->query("SELECT * from props where type='$type'");
+  $select->execute();
+  $props = $select->fetchAll(PDO::FETCH_OBJ);
+} else {
+  echo "<script>window.location.href='" . APPURL . "404.php'</script>";
 }
-$select = $conn->query("SELECT * from props where type='$type'");
-$select->execute();
-$props = $select->fetchAll(PDO::FETCH_OBJ);
+
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">
@@ -44,7 +47,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-              <?php foreach ($categories as $category) : ?>
+                <?php foreach ($categories as $category) : ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>
