@@ -88,7 +88,9 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
                   <li class="has-children">
                     <a href="#"><?php echo $_SESSION['username'] ?><?php echo "&nbsp&nbsp&nbsp"; ?></a>
                     <ul class="dropdown arrow-top">
-                      <li><a href="<?php echo APPURL; ?>/auth/logout.php">Logout</a></li>
+                      <li><a href="<?php echo APPURL; ?>user/favorites.php">Favorites</a></li>
+                      <li><a href="<?php echo APPURL; ?>user/requests.php">Requests</a></li>
+                      <li><a href="<?php echo APPURL; ?>auth/logout.php">Logout</a></li>
                     </ul>
                   </li>
                 <?php else : ?>

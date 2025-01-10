@@ -21,14 +21,17 @@ if (isset($_GET["id"])) {
   $relatedProps = $conn->query("SELECT * from props where home_type='$allDetails->home_type' and id != '$id'");
   $relatedProps->execute();
   $RelatedProp = $relatedProps->fetchAll(PDO::FETCH_OBJ);
+}
 
-
+if (isset($_SESSION['user_id'])) {
   //check if prop is added to favorites by user
   $user_id = $_SESSION['user_id'];
   $check = $conn->query("SELECT * FROM fav WHERE prop_id = '$id' AND user_id = '$user_id'");
   $check->execute();
   $fetch_check = $check->fetch(PDO::FETCH_OBJ);
+}
 
+if (isset($_SESSION['user_id'])) {
   //check if user has sent property request
   $check_request = $conn->query("SELECT * from requests where prop_id = '$id' AND user_id = ' $_SESSION[user_id]'");
   $check_request->execute();
