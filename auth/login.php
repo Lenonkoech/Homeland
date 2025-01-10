@@ -4,9 +4,10 @@
 if (isset($_SESSION['username'])) {
   echo "<script>window.location.href='" . APPURL . "'</script>";
 }
-if (isset($_POST["submit"])) {
+if (isset($_POST['submit'])) {
+
   if (empty($_POST['email']) or empty($_POST['password'])) {
-    echo "<script>alert('Fill in all fields')</script";
+    echo "<script>alert ('Fill in all fields')</script>";
   } else {
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -24,10 +25,10 @@ if (isset($_POST["submit"])) {
         // header("location:" . APPURL . "");
         echo "<script>window.location.href='" . APPURL . "'</script>";
       } else {
-        echo "<script>alert('Wrong email or password')</script";
+        echo "<script>alert ('Wrong email or password')</script>";
       }
     } else {
-      echo "<script>alert('Wrong email or password')</script";
+      echo "<script>alert ('Wrong email or password')</script>";
     }
   }
 }
