@@ -9,9 +9,15 @@ if (isset($_GET["id"])) {
   $single = $conn->query("SELECT * from props where id = '$id'");
   $single->execute();
   $allDetails = $single->fetch(PDO::FETCH_OBJ);
+
+
+  // fetch propety gallery
   $queryGallery = $conn->query("SELECT * from props_gallery where prop_id = '$id'");
   $queryGallery->execute();
   $gallery = $queryGallery->fetchAll(PDO::FETCH_OBJ);
+
+
+  // fetch related properties
   $relatedProps = $conn->query("SELECT * from props where home_type='$allDetails->home_type' and id != '$id'");
   $relatedProps->execute();
   $RelatedProp = $relatedProps->fetchAll(PDO::FETCH_OBJ);
@@ -22,6 +28,10 @@ if (isset($_GET["id"])) {
   $check = $conn->query("SELECT * FROM fav WHERE prop_id = '$id' AND user_id = '$user_id'");
   $check->execute();
   $fetch_check = $check->fetch(PDO::FETCH_OBJ);
+
+  //check if user has sent property request
+  $check_request = $conn->query("SELECT * from requests where prop_id = '$id' AND user_id = ' $_SESSION[user_id]'");
+  $check_request->execute();
 }
 ?>
 <div class="slide-one-item home-slider owl-carousel">
@@ -108,7 +118,7 @@ if (isset($_GET["id"])) {
             </div>
             <?php foreach ($gallery as $image): ?>
               <div class="col-sm-6 col-md-4 col-lg-3">
-                <a href="images/img_1.jpg" class="image-popup gal-item"><img src="images/<?php echo $image->image; ?>" alt="Image"
+                <a href="images/<?php echo $image->image; ?>" class="image-popup gal-item"><img src="images/<?php echo $image->image; ?>" alt="Image"
                     class="img-fluid"></a>
               </div>
             <?php endforeach; ?>
@@ -116,69 +126,87 @@ if (isset($_GET["id"])) {
         </div>
       </div>
       <div class="col-lg-4">
-
         <div class="bg-white widget border rounded">
-
           <h3 class="h4 text-black widget-title mb-3">Contact Agent</h3>
-          <form action="" class="form-contact-agent">
+          <?php if (isset($_SESSION['username'])) : ?>
+            <?php if ($check_request->rowCount() > 0) : ?>
+              <p>Request already sent. <br>Kindly wait for a reply from agent.</p>
+            <?php else : ?>
+              <form action="requests/process-requests.php" method="post" class="form-contact-agent">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" name="name" id="name" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" name="email" id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="email">Phone</label>
+                  <input type="text" id="phone" name="phone" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="hidden" id="phone" name="prop_id" value="<?php echo $id ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="hidden" id="phone" name="user_id" value="<?php echo $_SESSION['user_id']; ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                  <l>
+                    <input type="hidden" id="phone" name="agent-name" value="<?php echo $allDetails->admin_name ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="submit" name="submit" id="phone" class="btn btn-primary" value="Send Request">
+                </div>
+              </form>
+            <?php endif; ?>
+          <?php else : ?>
+            Login to contact agent
+        </div>
+      </div>
+    <?php endif; ?>
+    <div class="bg-white widget border rounded">
+      <h3 class="h4 text-black widget-title mb-3 ml-0">Share</h3>
+      <div class="px-3" style="margin-left: -15px;">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=&quote=" class="pt-3 pb-3 pr-3 pl-0"><span
+            class="icon-facebook"></span></a>
+        <a href="https://twitter.com/intent/tweet?text=&url=" class="pt-3 pb-3 pr-3 pl-0"><span
+            class="icon-twitter"></span></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=" class="pt-3 pb-3 pr-3 pl-0"><span
+            class="icon-linkedin"></span></a>
+      </div>
+    </div>
+    <!-- Only display section to logged in users -->
+    <?php if (isset($_SESSION['username'])) : ?>
+      <div class="bg-white widget border rounded">
+        <h3 class="h4 text-black widget-title mb-3 ml-0">Add to Favorites</h3>
+        <div class="px-3" style="margin-left: -15px;">
+          <form action="favs/add-fav.php" method="POST" class="form-contact-agent">
             <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" class="form-control">
+              <!-- <label for="name">prop_id</label> -->
+              <input type="hidden" id="name" name="prop_id" value="<?php echo $id; ?>" class="form-control">
             </div>
             <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" class="form-control">
+              <!-- <label for="email">user_id</label> -->
+              <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" class="form-control">
             </div>
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="text" id="phone" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="submit" id="phone" class="btn btn-primary" value="Send Message">
-            </div>
+            <?php if ($check->rowCount() > 0) : ?>
+              <div class="form-group">
+                <a href="favs/delete-fav.php?prop_id=<?php echo $id ?>&user_id=<?php echo $_SESSION['user_id'] ?>" class="btn btn-primary">Added to Favorites</a>
+              </div>
+            <?php else: ?>
+              <div class="form-group">
+                <input type="submit" class="btn btn-primary" name="submit" value="Add to Favorites">
+              </div>
+            <?php endif ?>
           </form>
         </div>
-
-        <div class="bg-white widget border rounded">
-          <h3 class="h4 text-black widget-title mb-3 ml-0">Share</h3>
-          <div class="px-3" style="margin-left: -15px;">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=&quote=" class="pt-3 pb-3 pr-3 pl-0"><span
-                class="icon-facebook"></span></a>
-            <a href="https://twitter.com/intent/tweet?text=&url=" class="pt-3 pb-3 pr-3 pl-0"><span
-                class="icon-twitter"></span></a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=" class="pt-3 pb-3 pr-3 pl-0"><span
-                class="icon-linkedin"></span></a>
-          </div>
-        </div>
-        <div class="bg-white widget border rounded">
-          <h3 class="h4 text-black widget-title mb-3 ml-0">Add to Favorites</h3>
-          <div class="px-3" style="margin-left: -15px;">
-            <form action="favs/add-fav.php" method="POST" class="form-contact-agent">
-              <div class="form-group">
-                <!-- <label for="name">prop_id</label> -->
-                <input type="hidden" id="name" name="prop_id" value="<?php echo $id; ?>" class="form-control">
-              </div>
-              <div class="form-group">
-                <!-- <label for="email">user_id</label> -->
-                <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" class="form-control">
-              </div>
-              <?php if ($check->rowCount() > 0) : ?>
-                <div class="form-group">
-                  <a href="favs/delete-fav.php?prop_id=<?php echo $id ?>&user_id=<?php echo $_SESSION['user_id'] ?>" class="btn btn-primary">Added to Favorites</a>
-                </div>
-              <?php else: ?>
-                <div class="form-group">
-                  <input type="submit" class="btn btn-primary" name="submit" value="Add to Favorites">
-                </div>
-              <?php endif ?>
-            </form>
-          </div>
-        </div>
-
       </div>
-
+    <?php endif; ?>
     </div>
+
   </div>
+</div>
 </div>
 
 <div class="site-section site-section-sm bg-light">
