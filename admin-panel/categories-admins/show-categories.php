@@ -1,4 +1,14 @@
-<?php include "../layout/header.php" ?>
+<?php require "../layout/header.php" ?>
+<?php require "../../config/config.php" ?>
+<?php
+if (!isset($_SESSION['adminname'])) {
+  echo "<script>window.location.href='" . ADMINURL . "/admins/login-admins.php'</script>";
+}
+$showCategories = $conn->query("SELECT * From categories");
+$showCategories->execute();
+$allCategories = $showCategories->fetchAll(PDO::FETCH_OBJ);
+$counter = 1;
+?>
 <div class="container-fluid">
 
   <div class="row">
@@ -6,7 +16,7 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-4 d-inline">Categories</h5>
-          <a href="create-category.html" class="btn btn-primary mb-4 text-center float-right">Create Categories</a>
+          <a href="create-category.php" class="btn btn-primary mb-4 text-center float-right">Create Categories</a>
           <table class="table">
             <thead>
               <tr>
@@ -17,24 +27,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Condo</td>
-                <td><a href="update-category.html" class="btn btn-warning text-white text-center ">Update Categories</a></td>
-                <td><a href="delete-category.html" class="btn btn-danger  text-center ">Delete Categories</a></td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Condo</td>
-                <td><a href="update-category.html" class="btn btn-warning text-white text-center">Update Categories</a></td>
-                <td><a href="delete-category.html" class="btn btn-danger  text-center ">Delete Categories</a></td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Condo</td>
-                <td><a href="update-category.html" class="btn btn-warning text-white text-center ">Update Categories</a></td>
-                <td><a href="delete-category.html" class="btn btn-danger text-center">Delete Categories</a></td>
-              </tr>
+              <?php foreach ($allCategories as $category): ?>
+                <tr>
+                  <th scope="row"><?php echo $counter++; ?></th>
+                  <td><?php echo $category->name; ?></td>
+                  <td><a href="<?php echo ADMINURL ?>/categories-admins/update-category.php?id=<?php echo $category->id; ?>" class="btn btn-warning text-white text-center ">Update</a></td>
+                  <td><a href="<?php echo ADMINURL ?>/categories-admins/delete-category.php?id=<?php echo $category->id; ?>" class="btn btn-danger  text-center ">Delete</a></td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
         </div>
