@@ -14,7 +14,7 @@ if (isset($_GET["price"])) {
 
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(images/<?php echo $prop->image; ?>);" data-aos="fade"
+    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>);" data-aos="fade"
       data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
@@ -27,7 +27,7 @@ if (isset($_GET["price"])) {
                                               echo "info";
                                             } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
             <h1 class="mb-2"><?php echo $prop->name; ?></h1>
-            <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo $prop->price; ?></strong></p>
             <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
           </div>
         </div>
@@ -121,13 +121,13 @@ if (isset($_GET["price"])) {
                                               echo "info";
                                             } ?>"><?php echo $prop->type; ?></span>
               </div>
-              <img src="images/<?php echo $prop->image; ?>" alt="Image" class="img-fluid">
+              <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>" alt="Image" class="img-fluid">
             </a>
             <div class="p-4 property-body">
               <h2 class="property-title"><a href="property-details.php?id=<?php echo $prop->id ?>"><?php echo $prop->name; ?></a></h2>
               <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span>
                 <?php echo $prop->location; ?></span>
-              <strong class="property-price text-primary mb-3 d-block text-success">$<?php echo $prop->price; ?></strong>
+              <strong class="property-price text-primary mb-3 d-block text-success">Ksh <?php echo $prop->price; ?></strong>
               <ul class="property-specs-wrap mb-3 mb-lg-0">
                 <li>
                   <span class="property-specs">Beds</span>

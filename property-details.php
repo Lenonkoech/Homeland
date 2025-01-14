@@ -9,6 +9,7 @@ if (isset($_GET["id"])) {
   $single = $conn->query("SELECT * from props where id = '$id'");
   $single->execute();
   $allDetails = $single->fetch(PDO::FETCH_OBJ);
+  $heroImage = $single->fetchAll(PDO::FETCH_OBJ);
 
 
   // fetch propety gallery
@@ -39,27 +40,25 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <div class="slide-one-item home-slider owl-carousel">
-  <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(images/<?php echo $prop->image; ?>);" data-aos="fade"
-      data-stellar-background-ratio="0.5">
-      <div class="container">
-        <div class="row align-items-center justify-content-center text-center">
-          <div class="col-md-10">
-            <span class="d-inline-block bg-<?php if ($prop->type == "rent") {
-                                              echo "success";
-                                            } else if ($prop->type == "sale") {
-                                              echo "danger";
-                                            } else {
-                                              echo "info";
-                                            } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
-            <h1 class="mb-2"><?php echo $prop->name; ?></h1>
-            <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
-            <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
-          </div>
+  <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo $allDetails->image; ?>);" data-aos="fade"
+    data-stellar-background-ratio="0.5">
+    <div class="container">
+      <div class="row align-items-center justify-content-center text-center">
+        <div class="col-md-10">
+          <span class="d-inline-block bg-<?php if ($allDetails->rent == "rent") {
+                                            echo "success";
+                                          } else if ($allDetails->type == "sale") {
+                                            echo "danger";
+                                          } else {
+                                            echo "info";
+                                          } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $allDetails->type; ?></span>
+          <h1 class="mb-2"><?php echo $allDetails->name; ?></h1>
+          <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo $allDetails->price; ?></strong></p>
+          <p><a href="#details" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
         </div>
       </div>
     </div>
-  <?php endforeach; ?>
+  </div>
 </div>
 
 <div class="site-section site-section-sm">
@@ -68,16 +67,16 @@ if (isset($_SESSION['user_id'])) {
       <div class="col-lg-8">
         <div>
 
-          <div class="slide-one-item home-slider owl-carousel">
+          <div class="slide-one-item home-slider owl-carousel" id="details">
             <?php foreach ($gallery as $image): ?>
-              <div><img src="<?php echo APPURL ?>images/<?php echo $image->image; ?>" alt="Image" class="img-fluid"></div>
+              <div><img src="<?php echo IMAGESURL; ?>/images/<?php echo $image->image; ?>" alt="Image" class="img-fluid"></div>
             <?php endforeach; ?>
           </div>
         </div>
         <div class="bg-white property-body border-bottom border-left border-right">
           <div class="row mb-5">
             <div class="col-md-6">
-              <strong class="text-success h1 mb-3">$<?php echo $allDetails->price; ?></strong>
+              <strong class="text-success h1 mb-3">Ksh <?php echo $allDetails->price; ?></strong>
             </div>
             <div class="col-md-6">
               <ul class="property-specs-wrap mb-3 mb-lg-0  float-lg-right">
@@ -110,7 +109,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <div class="col-md-6 col-lg-4 text-center border-bottom border-top py-3">
               <span class="d-inline-block text-black mb-0 caption-text">Price/Sqft</span>
-              <strong class="d-block">$<?php echo $allDetails->price_sqft ?></strong>
+              <strong class="d-block"><?php echo $allDetails->price_sqft ?></strong>
             </div>
           </div>
           <h2 class="h4 text-black">More Info</h2>
@@ -122,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <?php foreach ($gallery as $image): ?>
               <div class="col-sm-6 col-md-4 col-lg-3">
-                <a href="images/<?php echo $image->image; ?>" class="image-popup gal-item"><img src="images/<?php echo $image->image; ?>" alt="Image"
+                <a href="<?php echo IMAGESURL; ?>/images/<?php echo $image->image; ?>" class="image-popup gal-item"><img src="<?php echo IMAGESURL; ?>/images/<?php echo $image->image; ?>" alt="Image"
                     class="img-fluid"></a>
               </div>
             <?php endforeach; ?>
@@ -239,13 +238,13 @@ if (isset($_SESSION['user_id'])) {
                                                 echo "info";
                                               } ?>"><?php echo $relatedproperty->type; ?></span>
                 </div>
-                <img src="images/<?php echo $relatedproperty->image; ?>" alt="Image" class="img-fluid">
+                <img src="<?php echo IMAGESURL; ?>thumbnails/<?php echo $relatedproperty->image; ?>" alt="Image" class="img-fluid">
               </a>
               <div class="p-4 property-body">
                 <a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>
                 <h2 class="property-title"><a href="property-details.php?id=<?php echo $relatedproperty->id; ?>"><?php echo $relatedproperty->name; ?></a></h2>
                 <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $relatedproperty->location; ?></span>
-                <strong class="property-price text-primary mb-3 d-block text-success">$2,265,500</strong>
+                <strong class="property-price text-primary mb-3 d-block text-success">Ksh <?php echo $relatedproperty->price ?></strong>
                 <ul class="property-specs-wrap mb-3 mb-lg-0">
                   <li>
                     <span class="property-specs">Beds</span>

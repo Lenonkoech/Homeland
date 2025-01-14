@@ -8,7 +8,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
 ?>
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(images/<?php echo $prop->image; ?>);" data-aos="fade"
+    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>);" data-aos="fade"
       data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
@@ -41,9 +41,9 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-              <?php foreach ($categories as $category) : ?>
+                <?php foreach ($categories as $category) : ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
-                <?php endforeach; ?>n>
+                  <?php endforeach; ?>n>
               </select>
             </div>
           </div>
@@ -111,7 +111,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <div class="col-md-12">
           <div class="property-entry horizontal d-lg-flex">
 
-            <a href="<?php APPURL?>property-details.php?id=<?php echo $prop->id;?>" class="property-thumbnail h-100">
+            <a href="<?php APPURL ?>property-details.php?id=<?php echo $prop->id; ?>" class="property-thumbnail h-100">
               <div class="offer-type-wrap">
                 <span class="offer-type bg-<?php if ($prop->type == "rent") {
                                               echo "success";
@@ -125,7 +125,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             </a>
 
             <div class="p-4 property-body">
-              <h2 class="property-title"><a href="<?php APPURL?>property-details.php?id=<?php echo $prop->id;?>"><?php echo $prop->name; ?></a></h2>
+              <h2 class="property-title"><a href="<?php APPURL ?>property-details.php?id=<?php echo $prop->id; ?>"><?php echo $prop->name; ?></a></h2>
               <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $prop->location ?></span>
               <strong class="property-price text-primary mb-3 d-block text-success">$<?php echo $prop->price ?></strong>
               <p><?php echo $prop->description ?></p>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 define("APPURL", 'http://localhost/homeland/');
+define("IMAGESURL", 'http://localhost/homeland/admin-panel/properties-admins');
 require dirname(dirname(__FILE__)) . '/config/config.php';
 
 $select = $conn->query("SELECT * from categories");
@@ -57,7 +58,7 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
       <div class="container py-1">
         <div class="row align-items-center">
           <div class="col-8 col-md-8 col-lg-4">
-            <h1 class="mb-0"><a href="index.php" class="text-white h2 mb-0"><strong>Homeland<span
+            <h1 class="mb-0"><a href="<?php echo APPURL; ?>" class="text-white h2 mb-0"><strong>Homeland<span
                     class="text-danger">.</span></strong></a></h1>
           </div>
           <div class="col-4 col-md-4 col-lg-8">
@@ -72,8 +73,7 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
                 </li>
                 <li><a href="<?php echo APPURL; ?>sale.php?type=sale">Buy</a></li>
                 <li><a href="<?php echo APPURL; ?>rent.php?type=rent">Rent</a></li>
-                <li class="has-children">
-                  <a href="<?php echo APPURL; ?>properties.php">Properties</a>
+                <li class="has-children "><a href="">Properties</a>
                   <ul class="dropdown arrow-top">
                     <?php foreach ($categories as $category) : ?>
                       <li><a href="<?php echo APPURL; ?>properties.php?home_type=<?php echo str_replace(' ', '-', $category->name); ?>"><?php echo $category->name; ?></a></li>
