@@ -25,9 +25,8 @@ if (isset($_POST['submit'])) {
 
     echo "<script>window.location.href='" . ADMINURL . "/categories-admins/show-categories.php'</script>";
   }
-}
- else {
-  echo "<script>window.location.href='" . ADMINURL . "/admins/404.php'</script>";
+} else {
+  // echo "<script>window.location.href='" . ADMINURL . "/admins/404.php'</script>";
 }
 
 ?>
