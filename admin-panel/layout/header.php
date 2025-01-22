@@ -1,5 +1,6 @@
 <?php
 session_start();
+define("APPURL", 'http://localhost/homeland');
 define("ADMINURL", 'http://localhost/homeland/admin-panel');
 require dirname(dirname(__FILE__)) . '../../config/config.php';
 
