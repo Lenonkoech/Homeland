@@ -9,10 +9,27 @@ if (isset($_POST["submit"])) {
   $types = $_POST["types"];
   $offers = $_POST["offers"];
   $cities = $_POST["cities"];
+  
+  // Get current page number
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $perPage = 8; // Number of properties per page
+  $offset = ($page - 1) * $perPage;
 
-  $search = $conn->query("SELECT * FROM props where home_type LIKE '%$types%' OR type LIKE '%$offers' OR location LIKE '%$cities%'");
+  // Build the WHERE clause prioritizing listing type and offer type
+  $whereClause = "WHERE (home_type LIKE '%$types%' AND type LIKE '%$offers%')";
+  if (!empty($cities)) {
+    $whereClause .= " OR location LIKE '%$cities%'";
+  }
+
+  // Get total number of matching properties
+  $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props $whereClause");
+  $totalQuery->execute();
+  $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+  $totalPages = ceil($total / $perPage);
+
+  // Get properties for current page
+  $search = $conn->query("SELECT * FROM props $whereClause LIMIT $offset, $perPage");
   $search->execute();
-
   $listings = $search->fetchAll(PDO::FETCH_OBJ);
 }
 ?>
@@ -42,49 +59,57 @@ if (isset($_POST["submit"])) {
   <?php endforeach; ?>
 </div>
 
-
 <div class="site-section site-section-sm pb-0">
   <div class="container">
     <div class="row">
       <form class="form-search col-md-12" action="search.php" method="POST" style="margin-top: -100px;">
-        <div class="row  align-items-end">
-          <div class="col-md-3">
+        <div class="row align-items-end">
+          <div class="col-md-4">
             <label for="list-types">Listing Types</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="types" id="list-types" class="form-control d-block rounded-0">
+              <select name="types" id="list-types" class="form-control d-block rounded-0" required>
                 <?php foreach ($categories as $category) : ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="offer-types">Offer Type</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="offers" id="offers" class="form-control d-block rounded-0">
+              <select name="offers" id="offers" class="form-control d-block rounded-0" required>
+                <option value="">Select type</option>
                 <option value="sale">For Sale</option>
                 <option value="rent">For Rent</option>
                 <option value="lease">For Lease</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <label for="select-city">Select City</label>
+          <div class="col-md-4">
+            <label for="select-city">Location (Optional)</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="cities" id="select-city" class="form-control d-block rounded-0">
-                <option value="new york">New York</option>
-                <option value="brooklyn">Brooklyn</option>
-                <option value="london">London</option>
-                <option value="japan">Japan</option>
-                <option value="philippines">Philippines</option>
+                <option value="">Any Location</option>
+                <option value="nairobi">Nairobi</option>
+                <option value="mombasa">Mombasa</option>
+                <option value="kisumu">Kisumu</option>
+                <option value="nakuru">Nakuru</option>
+                <option value="eldoret">Eldoret</option>
+                <option value="thika">Thika</option>
+                <option value="malindi">Malindi</option>
+                <option value="kakamega">Kakamega</option>
+                <option value="nyeri">Nyeri</option>
+                <option value="meru">Meru</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <input type="submit" name="submit" class="btn btn-success text-white btn-lg rounded-0" value="Search Properties">
           </div>
         </div>
       </form>
@@ -106,13 +131,11 @@ if (isset($_POST["submit"])) {
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <div class="site-section site-section-sm bg-light">
   <div class="container">
-
     <div class="row mb-5">
       <?php if (count($listings) > 0): ?>
         <?php foreach ($listings as $listing): ?>
@@ -151,19 +174,56 @@ if (isset($_POST["submit"])) {
 
                     </li>
                   </ul>
-
               </div>
             </div>
           </div>
         <?php endforeach; ?>
-        <?php else : ?>
+      <?php else : ?>
         <div class="bg-success text-white px-3">
           No property found !!!
         </div>
       <?php endif; ?>
     </div>
 
-
+    <?php if (isset($totalPages) && $totalPages > 1): ?>
+    <div class="row mt-5">
+      <div class="col-md-12 text-center">
+        <div class="site-pagination">
+          <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page-1; ?>&types=<?php echo urlencode($types); ?>&offers=<?php echo urlencode($offers); ?>&cities=<?php echo urlencode($cities); ?>">&laquo;</a>
+          <?php endif; ?>
+          
+          <?php
+          $startPage = max(1, $page - 2);
+          $endPage = min($totalPages, $page + 2);
+          
+          if ($startPage > 1) {
+            echo '<a href="?page=1&types=' . urlencode($types) . '&offers=' . urlencode($offers) . '&cities=' . urlencode($cities) . '">1</a>';
+            if ($startPage > 2) {
+              echo '<span>...</span>';
+            }
+          }
+          
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            echo '<a href="?page=' . $i . '&types=' . urlencode($types) . '&offers=' . urlencode($offers) . '&cities=' . urlencode($cities) . '"' . ($i == $page ? ' class="active"' : '') . '>' . $i . '</a>';
+          }
+          
+          if ($endPage < $totalPages) {
+            if ($endPage < $totalPages - 1) {
+              echo '<span>...</span>';
+            }
+            echo '<a href="?page=' . $totalPages . '&types=' . urlencode($types) . '&offers=' . urlencode($offers) . '&cities=' . urlencode($cities) . '">' . $totalPages . '</a>';
+          }
+          ?>
+          
+          <?php if ($page < $totalPages): ?>
+            <a href="?page=<?php echo $page+1; ?>&types=<?php echo urlencode($types); ?>&offers=<?php echo urlencode($offers); ?>&cities=<?php echo urlencode($cities); ?>">&raquo;</a>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
   </div>
 </div>
+
 <?php require "includes/footer.php" ?>

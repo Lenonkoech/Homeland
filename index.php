@@ -1,10 +1,22 @@
 <?php require "includes/header.php" ?>
 <?php require "config/config.php" ?>
 <?php
+// Get current page number
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perPage = 8; // Number of properties per page
+$offset = ($page - 1) * $perPage;
 
-$select = $conn->query("SELECT * from props");
+// Get total number of properties
+$totalQuery = $conn->query("SELECT COUNT(*) as total FROM props");
+$totalQuery->execute();
+$total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+$totalPages = ceil($total / $perPage);
+
+// Get properties for current page
+$select = $conn->query("SELECT * FROM props LIMIT $offset, $perPage");
 $select->execute();
-$props = $select->fetchAll(PDO::FETCH_OBJ); ?>
+$props = $select->fetchAll(PDO::FETCH_OBJ);
+?>
 
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
@@ -60,23 +72,21 @@ $props = $select->fetchAll(PDO::FETCH_OBJ); ?>
           </div>
           <div class="col-md-3">
             <label for="select-city">Select City</label>
-            <label for="select-city">Select Town</label>
-<div class="select-wrap">
-  <span class="icon icon-arrow_drop_down"></span>
-  <select name="select-city" id="select-city" class="form-control d-block rounded-0">
-    <option value="nairobi">Nairobi</option>
-    <option value="mombasa">Mombasa</option>
-    <option value="kisumu">Kisumu</option>
-    <option value="nakuru">Nakuru</option>
-    <option value="eldoret">Eldoret</option>
-    <option value="thika">Thika</option>
-    <option value="nyeri">Nyeri</option>
-    <option value="machakos">Machakos</option>
-    <option value="kericho">Kericho</option>
-    <option value="meru">Kajiado</option>
-  </select>
-</div>
-
+            <div class="select-wrap">
+              <span class="icon icon-arrow_drop_down"></span>
+              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
+                <option value="nairobi">Nairobi</option>
+                <option value="mombasa">Mombasa</option>
+                <option value="kisumu">Kisumu</option>
+                <option value="nakuru">Nakuru</option>
+                <option value="eldoret">Eldoret</option>
+                <option value="thika">Thika</option>
+                <option value="nyeri">Nyeri</option>
+                <option value="machakos">Machakos</option>
+                <option value="kericho">Kericho</option>
+                <option value="kajiado">Kajiado</option>
+              </select>
+            </div>
           </div>
           <div class="col-md-3">
             <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
@@ -158,6 +168,44 @@ $props = $select->fetchAll(PDO::FETCH_OBJ); ?>
       <?php endforeach; ?>
     </div>
 
+    <?php if ($totalPages > 1): ?>
+    <div class="row mt-5">
+      <div class="col-md-12 text-center">
+        <div class="site-pagination">
+          <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page-1; ?>">&laquo;</a>
+          <?php endif; ?>
+          
+          <?php
+          $startPage = max(1, $page - 2);
+          $endPage = min($totalPages, $page + 2);
+          
+          if ($startPage > 1) {
+            echo '<a href="?page=1">1</a>';
+            if ($startPage > 2) {
+              echo '<span>...</span>';
+            }
+          }
+          
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            echo '<a href="?page=' . $i . '"' . ($i == $page ? ' class="active"' : '') . '>' . $i . '</a>';
+          }
+          
+          if ($endPage < $totalPages) {
+            if ($endPage < $totalPages - 1) {
+              echo '<span>...</span>';
+            }
+            echo '<a href="?page=' . $totalPages . '">' . $totalPages . '</a>';
+          }
+          ?>
+          
+          <?php if ($page < $totalPages): ?>
+            <a href="?page=<?php echo $page+1; ?>">&raquo;</a>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
 
   </div>
 </div>

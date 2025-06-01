@@ -1,7 +1,19 @@
 <?php require "includes/header.php" ?>
 <?php require "config/config.php" ?>
 <?php
-$select = $conn->query("SELECT * from props");
+// Get current page number
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perPage = 8; // Number of properties per page
+$offset = ($page - 1) * $perPage;
+
+// Get total number of properties
+$totalQuery = $conn->query("SELECT COUNT(*) as total FROM props");
+$totalQuery->execute();
+$total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+$totalPages = ceil($total / $perPage);
+
+// Get properties for current page
+$select = $conn->query("SELECT * FROM props LIMIT $offset, $perPage");
 $select->execute();
 $props = $select->fetchAll(PDO::FETCH_OBJ);
 
@@ -21,7 +33,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
                                               echo "info";
                                             } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
             <h1 class="mb-2"><?php echo $prop->name; ?></h1>
-            <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo $prop->price; ?></strong></p>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
             <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
           </div>
         </div>
@@ -127,7 +139,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
             <div class="p-4 property-body">
               <h2 class="property-title"><a href="<?php APPURL ?>property-details.php?id=<?php echo $prop->id; ?>"><?php echo $prop->name; ?></a></h2>
               <span class="property-location d-block mb-3"><span class="property-icon icon-room"></span><?php echo $prop->location ?></span>
-              <strong class="property-price text-primary mb-3 d-block text-success">Ksh <?php echo $prop->price ?></strong>
+              <strong class="property-price text-primary mb-3 d-block text-success">$<?php echo $prop->price ?></strong>
               <p><?php echo $prop->description ?></p>
               <ul class="property-specs-wrap mb-3 mb-lg-0">
                 <li>
@@ -152,195 +164,44 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         </div>
       </div>
     <?php endforeach ?>
+    <?php if ($totalPages > 1): ?>
     <div class="row mt-5">
       <div class="col-md-12 text-center">
         <div class="site-pagination">
-          <a href="#" class="active">1</a>
-          <a href="#">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">5</a>
-          <span>...</span>
-          <a href="#">10</a>
+          <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page-1; ?>">&laquo;</a>
+          <?php endif; ?>
+          
+          <?php
+          $startPage = max(1, $page - 2);
+          $endPage = min($totalPages, $page + 2);
+          
+          if ($startPage > 1) {
+            echo '<a href="?page=1">1</a>';
+            if ($startPage > 2) {
+              echo '<span>...</span>';
+            }
+          }
+          
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            echo '<a href="?page=' . $i . '"' . ($i == $page ? ' class="active"' : '') . '>' . $i . '</a>';
+          }
+          
+          if ($endPage < $totalPages) {
+            if ($endPage < $totalPages - 1) {
+              echo '<span>...</span>';
+            }
+            echo '<a href="?page=' . $totalPages . '">' . $totalPages . '</a>';
+          }
+          ?>
+          
+          <?php if ($page < $totalPages): ?>
+            <a href="?page=<?php echo $page+1; ?>">&raquo;</a>
+          <?php endif; ?>
         </div>
       </div>
     </div>
-
-  </div>
-</div>
-
-<div class="site-section">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-7 text-center">
-        <div class="site-section-title">
-          <h2>Why Choose Us?</h2>
-        </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis maiores quisquam saepe architecto error
-          corporis aliquam. Cum ipsam a consectetur aut sunt sint animi, pariatur corporis, eaque, deleniti cupiditate
-          officia.</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6 col-lg-4">
-        <a href="#" class="service text-center">
-          <span class="icon flaticon-house"></span>
-          <h2 class="service-heading">Research Subburbs</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt iure qui natus perspiciatis ex odio
-            molestia.</p>
-          <p><span class="read-more">Read More</span></p>
-        </a>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <a href="#" class="service text-center">
-          <span class="icon flaticon-sold"></span>
-          <h2 class="service-heading">Sold Houses</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt iure qui natus perspiciatis ex odio
-            molestia.</p>
-          <p><span class="read-more">Read More</span></p>
-        </a>
-      </div>
-      <div class="col-md-6 col-lg-4">
-        <a href="#" class="service text-center">
-          <span class="icon flaticon-camera"></span>
-          <h2 class="service-heading">Security Priority</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt iure qui natus perspiciatis ex odio
-            molestia.</p>
-          <p><span class="read-more">Read More</span></p>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="site-section bg-light">
-  <div class="container">
-    <div class="row justify-content-center mb-5">
-      <div class="col-md-7 text-center">
-        <div class="site-section-title">
-          <h2>Recent Blog</h2>
-        </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis maiores quisquam saepe architecto error
-          corporis aliquam. Cum ipsam a consectetur aut sunt sint animi, pariatur corporis, eaque, deleniti cupiditate
-          officia.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="100">
-        <a href="#"><img src="images/img_4.jpg" alt="Image" class="img-fluid"></a>
-        <div class="p-4 bg-white">
-          <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">Mtaa Living</a></h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
-            sunt.</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="200">
-        <a href="#"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
-        <div class="p-4 bg-white">
-          <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">Roofs over KE</a></h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
-            sunt.</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="300">
-        <a href="#"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
-        <div class="p-4 bg-white">
-          <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">The Boma Blog</a></h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
-            sunt.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="site-section">
-  <div class="container">
-
-    <div class="row justify-content-center mb-5">
-      <div class="col-md-7 text-center">
-        <div class="site-section-title">
-          <h2>Frequently Ask Questions</h2>
-        </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis maiores quisquam saepe architecto error
-          corporis aliquam. Cum ipsam a consectetur aut sunt sint animi, pariatur corporis, eaque, deleniti cupiditate
-          officia.</p>
-      </div>
-    </div>
-
-    <div class="row justify-content-center" data-aos="fade" data-aos-delay="100">
-      <div class="col-md-8">
-        <div class="accordion unit-8" id="accordion">
-          <div class="accordion-item">
-            <h3 class="mb-0 heading">
-              <a class="btn-block" data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="true"
-                aria-controls="collapseOne">What is the name of your company<span class="icon"></span></a>
-            </h3>
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="body-text">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur quae cumque perspiciatis
-                  aperiam accusantium facilis provident aspernatur nisi optio debitis dolorum, est eum eligendi vero
-                  aut ad necessitatibus nulla sit labore doloremque magnam! Ex molestiae, dolor tempora, ad fuga
-                  minima enim mollitia consequuntur, necessitatibus praesentium eligendi officia recusandae culpa
-                  tempore eaque quasi ullam magnam modi quidem in amet. Quod debitis error placeat, tempore quasi
-                  aliquid eaque vel facilis culpa voluptate.</p>
-              </div>
-            </div>
-          </div> <!-- .accordion-item -->
-
-          <div class="accordion-item">
-            <h3 class="mb-0 heading">
-              <a class="btn-block" data-toggle="collapse" href="#collapseTwo" role="button" aria-expanded="false"
-                aria-controls="collapseTwo">How much pay for 3 months?<span class="icon"></span></a>
-            </h3>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="body-text">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel ad laborum expedita. Nostrum iure
-                  atque enim quisquam minima distinctio omnis, consequatur aliquam suscipit, quidem, esse aspernatur!
-                  Libero, excepturi animi repellendus porro impedit nihil in doloremque a quaerat enim voluptatum,
-                  perspiciatis, quas dignissimos maxime ut cum reiciendis eius dolorum voluptatem aliquam!</p>
-              </div>
-            </div>
-          </div> <!-- .accordion-item -->
-
-          <div class="accordion-item">
-            <h3 class="mb-0 heading">
-              <a class="btn-block" data-toggle="collapse" href="#collapseThree" role="button" aria-expanded="false"
-                aria-controls="collapseThree">Do I need to register? <span class="icon"></span></a>
-            </h3>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="body-text">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel ad laborum expedita. Nostrum iure
-                  atque enim quisquam minima distinctio omnis, consequatur aliquam suscipit, quidem, esse aspernatur!
-                  Libero, excepturi animi repellendus porro impedit nihil in doloremque a quaerat enim voluptatum,
-                  perspiciatis, quas dignissimos maxime ut cum reiciendis eius dolorum voluptatem aliquam!</p>
-              </div>
-            </div>
-          </div> <!-- .accordion-item -->
-
-          <div class="accordion-item">
-            <h3 class="mb-0 heading">
-              <a class="btn-block" data-toggle="collapse" href="#collapseFour" role="button" aria-expanded="false"
-                aria-controls="collapseFour">Who should I contact in case of support.<span class="icon"></span></a>
-            </h3>
-            <div id="collapseFour" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="body-text">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel ad laborum expedita. Nostrum iure
-                  atque enim quisquam minima distinctio omnis, consequatur aliquam suscipit, quidem, esse aspernatur!
-                  Libero, excepturi animi repellendus porro impedit nihil in doloremque a quaerat enim voluptatum,
-                  perspiciatis, quas dignissimos maxime ut cum reiciendis eius dolorum voluptatem aliquam!</p>
-              </div>
-            </div>
-          </div> <!-- .accordion-item -->
-
-        </div>
-      </div>
-    </div>
+    <?php endif; ?>
 
   </div>
 </div>

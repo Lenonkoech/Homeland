@@ -3,7 +3,20 @@
 <?php
 if (isset($_GET["type"])) {
   $type = $_GET["type"];
-  $select = $conn->query("SELECT * from props where type='$type'");
+  
+  // Get current page number
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $perPage = 8; // Number of properties per page
+  $offset = ($page - 1) * $perPage;
+
+  // Get total number of properties for this type
+  $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props WHERE type='$type'");
+  $totalQuery->execute();
+  $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+  $totalPages = ceil($total / $perPage);
+
+  // Get properties for current page
+  $select = $conn->query("SELECT * FROM props WHERE type='$type' LIMIT $offset, $perPage");
   $select->execute();
   $props = $select->fetchAll(PDO::FETCH_OBJ);
 } else {
@@ -69,11 +82,16 @@ if (isset($_GET["type"])) {
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
               <select name="select-city" id="select-city" class="form-control d-block rounded-0">
-                <option value="new york">New York</option>
-                <option value="brooklyn">Brooklyn</option>
-                <option value="london">London</option>
-                <option value="japan">Japan</option>
-                <option value="philippines">Philippines</option>
+                <option value="nairobi">Nairobi</option>
+                <option value="mombasa">Mombasa</option>
+                <option value="kisumu">Kisumu</option>
+                <option value="nakuru">Nakuru</option>
+                <option value="eldoret">Eldoret</option>
+                <option value="thika">Thika</option>
+                <option value="nyeri">Nyeri</option>
+                <option value="machakos">Machakos</option>
+                <option value="kericho">Kericho</option>
+                <option value="kajiado">Kajiado</option>
               </select>
             </div>
           </div>
@@ -152,6 +170,44 @@ if (isset($_GET["type"])) {
       <?php endforeach; ?>
     </div>
 
+    <?php if ($totalPages > 1): ?>
+    <div class="row mt-5">
+      <div class="col-md-12 text-center">
+        <div class="site-pagination">
+          <?php if ($page > 1): ?>
+            <a href="?type=<?php echo $type; ?>&page=<?php echo $page-1; ?>">&laquo;</a>
+          <?php endif; ?>
+          
+          <?php
+          $startPage = max(1, $page - 2);
+          $endPage = min($totalPages, $page + 2);
+          
+          if ($startPage > 1) {
+            echo '<a href="?type=' . $type . '&page=1">1</a>';
+            if ($startPage > 2) {
+              echo '<span>...</span>';
+            }
+          }
+          
+          for ($i = $startPage; $i <= $endPage; $i++) {
+            echo '<a href="?type=' . $type . '&page=' . $i . '"' . ($i == $page ? ' class="active"' : '') . '>' . $i . '</a>';
+          }
+          
+          if ($endPage < $totalPages) {
+            if ($endPage < $totalPages - 1) {
+              echo '<span>...</span>';
+            }
+            echo '<a href="?type=' . $type . '&page=' . $totalPages . '">' . $totalPages . '</a>';
+          }
+          ?>
+          
+          <?php if ($page < $totalPages): ?>
+            <a href="?type=<?php echo $type; ?>&page=<?php echo $page+1; ?>">&raquo;</a>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
 
   </div>
 </div>
