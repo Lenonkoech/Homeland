@@ -43,9 +43,14 @@ if (isset($_POST['submit'])) {
         $adminname = $_SESSION['adminname'];
         $image = $_FILES['thumbnail']['name'];
 
+        // Sanitize and encode the thumbnail filename
+        $imageExt = pathinfo($image, PATHINFO_EXTENSION);
+        $imageName = str_replace('.', '-', basename($image, $imageExt)) . time() . "." . $imageExt;
+        $imageName = preg_replace('/[^a-zA-Z0-9-_.]/', '', $imageName); // Remove special characters
+
         // Validate and upload thumbnail image
         $thumbnailDir = "thumbnails/";
-        $thumbnailPath = $thumbnailDir . basename($image);
+        $thumbnailPath = $thumbnailDir . $imageName;
         $allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
         $imageType = $_FILES['thumbnail']['type'];
 
@@ -70,7 +75,7 @@ if (isset($_POST['submit'])) {
                     ':description' => $description,
                     ':price_sqft' => $price_sqft,
                     ':adminname' => $adminname,
-                    ':image' => $image,
+                    ':image' => $imageName,
                 ]);
 
                 // Move the uploaded thumbnail file
@@ -83,7 +88,10 @@ if (isset($_POST['submit'])) {
                             $filename = $_FILES['image']['name'][$key];
                             $filenameTmp = $_FILES['image']['tmp_name'][$key];
                             $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                            
+                            // Sanitize and encode gallery image filename
                             $finalimg = str_replace('.', '-', basename($filename, $ext)) . time() . "." . $ext;
+                            $finalimg = preg_replace('/[^a-zA-Z0-9-_.]/', '', $finalimg); // Remove special characters
 
                             // Validate file type for gallery images
                             if (!in_array($ext, ['jpg', 'jpeg', 'png'])) {

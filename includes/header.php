@@ -58,8 +58,8 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
       <div class="container py-1">
         <div class="row align-items-center">
           <div class="col-8 col-md-8 col-lg-4">
-            <h1 class="mb-0"><a href="<?php echo APPURL; ?>" class="text-white h2 mb-0"><strong>Homeland<span
-                    class="text-danger">.</span></strong></a></h1>
+            <h1 class="mb-0"><a href="<?php echo APPURL; ?>" class="text-white h2 mb-0"><strong>Qejani<span
+                    class="text-danger">Connect</span></strong></a></h1>
           </div>
           <div class="col-4 col-md-4 col-lg-8">
             <nav class="site-navigation text-right text-md-right" role="navigation">

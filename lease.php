@@ -120,7 +120,7 @@ if (isset($_GET["type"])) {
                                               echo "info";
                                             } ?>"><?php echo $prop->type; ?></span>
               </div>
-              <img src="images/<?php echo $prop->image; ?>" alt="Image" class="img-fluid">
+              <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo urlencode($prop->image); ?>" alt="Image" class="img-fluid">
             </a>
             <div class="p-4 property-body">
               <h2 class="property-title"><a href="property-details.php?id=<?php echo $prop->id ?>"><?php echo $prop->name; ?></a></h2>

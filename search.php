@@ -33,7 +33,7 @@ if (isset($_POST["submit"])) {
                                             } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
             <h1 class="mb-2"><?php echo $prop->name; ?>
             </h1>
-            <p class="mb-5"><strong class="h2 text-success font-weight-bold">$<?php echo $prop->price; ?></strong></p>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo $prop->price; ?></strong></p>
             <p><a href="<?php APPURL; ?>property-details.php?id=<?php echo $prop->id; ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
           </div>
         </div>
@@ -133,7 +133,7 @@ if (isset($_POST["submit"])) {
               <div class="p-4 property-body">
                 <h2 class="property-title"><a href="property-details.html?id=<?php echo $listing->id; ?>"><?php echo $listing->name; ?></a></h2>
                 <span class="property-location d-block mb-3"><span class="property-icon icon-room"><?php echo $listing->location; ?></span>
-                  <strong class="property-price text-primary mb-3 d-block text-success"><?php echo $listing->price; ?></strong>
+                  <strong class="property-price text-primary mb-3 d-block text-success">Ksh <?php echo $listing->price; ?></strong>
                   <ul class="property-specs-wrap mb-3 mb-lg-0">
                     <li>
                       <span class="property-specs">Beds</span>

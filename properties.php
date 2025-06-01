@@ -130,7 +130,7 @@ if (isset($_GET["home_type"])) {
                                                 echo "info";
                                               } ?>"><?php echo $listing->type; ?></span>
                 </div>
-                <img src="images/<?php echo $listing->image; ?>" alt="Image" class="img-fluid">
+                <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo urlencode($listing->image); ?>" alt="Image" class="img-fluid">
               </a>
               <div class="p-4 property-body">
                 <h2 class="property-title"><a href="property-details.php?id=<?php echo $listing->id; ?>"><?php echo $listing->name; ?></a></h2>

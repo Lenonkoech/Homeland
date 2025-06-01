@@ -36,7 +36,7 @@ $props = $requests->fetchAll(PDO::FETCH_OBJ);
                                                                     echo "info";
                                                                 } ?>"><?php echo $prop->type; ?></span>
                                 </div>
-                                <img src="<?php echo APPURL; ?>images/<?php echo $prop->image; ?>" alt="Image" class="img-fluid">
+                                <img src="<?php echo APPURL; ?>images/<?php echo urlencode($prop->image); ?>" alt="Image" class="img-fluid">
                             </a>
                             <div class="p-4 property-body">
                                 <h2 class="property-title"><a href="<?php echo APPURL; ?>property-details.php?id=<?php echo $prop->id ?>"><?php echo $prop->name; ?></a></h2>
