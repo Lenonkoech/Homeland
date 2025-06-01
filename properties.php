@@ -11,17 +11,16 @@ if (isset($_GET["home_type"])) {
   
   // Get current page number
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-  $perPage = 8; // Number of properties per page
-  $offset = ($page - 1) * $perPage;
+  $offset = ($page - 1) * ITEMS_PER_PAGE;
 
   // Get total number of matching properties
   $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props WHERE home_type LIKE '%$home_type%'");
   $totalQuery->execute();
   $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
-  $totalPages = ceil($total / $perPage);
+  $totalPages = ceil($total / ITEMS_PER_PAGE);
 
   // Get properties for current page
-  $search = $conn->query("SELECT * FROM props WHERE home_type LIKE '%$home_type%' LIMIT $offset, $perPage");
+  $search = $conn->query("SELECT * FROM props WHERE home_type LIKE '%$home_type%' LIMIT $offset, " . ITEMS_PER_PAGE);
   $search->execute();
   $listings = $search->fetchAll(PDO::FETCH_OBJ);
 } else {

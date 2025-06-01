@@ -12,8 +12,7 @@ if (isset($_POST["submit"])) {
   
   // Get current page number
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-  $perPage = 8; // Number of properties per page
-  $offset = ($page - 1) * $perPage;
+  $offset = ($page - 1) * ITEMS_PER_PAGE;
 
   // Build the WHERE clause prioritizing listing type and offer type
   $whereClause = "WHERE (home_type LIKE '%$types%' AND type LIKE '%$offers%')";
@@ -25,10 +24,10 @@ if (isset($_POST["submit"])) {
   $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props $whereClause");
   $totalQuery->execute();
   $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
-  $totalPages = ceil($total / $perPage);
+  $totalPages = ceil($total / ITEMS_PER_PAGE);
 
   // Get properties for current page
-  $search = $conn->query("SELECT * FROM props $whereClause LIMIT $offset, $perPage");
+  $search = $conn->query("SELECT * FROM props $whereClause LIMIT $offset, " . ITEMS_PER_PAGE);
   $search->execute();
   $listings = $search->fetchAll(PDO::FETCH_OBJ);
 }
@@ -194,8 +193,8 @@ if (isset($_POST["submit"])) {
           <?php endif; ?>
           
           <?php
-          $startPage = max(1, $page - 2);
-          $endPage = min($totalPages, $page + 2);
+          $startPage = max(1, $page - PAGINATION_RANGE);
+          $endPage = min($totalPages, $page + PAGINATION_RANGE);
           
           if ($startPage > 1) {
             echo '<a href="?page=1&types=' . urlencode($types) . '&offers=' . urlencode($offers) . '&cities=' . urlencode($cities) . '">1</a>';

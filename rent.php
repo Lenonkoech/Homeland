@@ -6,17 +6,16 @@ if (isset($_GET["type"])) {
   
   // Get current page number
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-  $perPage = 8; // Number of properties per page
-  $offset = ($page - 1) * $perPage;
+  $offset = ($page - 1) * ITEMS_PER_PAGE;
 
   // Get total number of properties for this type
   $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props WHERE type='$type'");
   $totalQuery->execute();
   $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
-  $totalPages = ceil($total / $perPage);
+  $totalPages = ceil($total / ITEMS_PER_PAGE);
 
   // Get properties for current page
-  $select = $conn->query("SELECT * FROM props WHERE type='$type' LIMIT $offset, $perPage");
+  $select = $conn->query("SELECT * FROM props WHERE type='$type' LIMIT $offset, " . ITEMS_PER_PAGE);
   $select->execute();
   $props = $select->fetchAll(PDO::FETCH_OBJ);
 } else {

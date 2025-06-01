@@ -13,6 +13,11 @@ try {
     if (!defined("PASS"))
     define("PASS", "");
 
+    // Pagination settings
+    if (!defined("ITEMS_PER_PAGE"))
+        define("ITEMS_PER_PAGE", 8);
+    if (!defined("PAGINATION_RANGE"))
+        define("PAGINATION_RANGE", 2);
 
     $conn = new PDO("mysql:host=" . HOSTNAME . ";dbname=" . DBNAME . ";", USER, PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
