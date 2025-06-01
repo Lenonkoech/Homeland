@@ -231,7 +231,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <a href="#"><img src="images/img_4.jpg" alt="Image" class="img-fluid"></a>
         <div class="p-4 bg-white">
           <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
+          <h2 class="h5 text-black mb-3"><a href="#">Mtaa Living</a></h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
             sunt.</p>
         </div>
@@ -240,7 +240,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <a href="#"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
         <div class="p-4 bg-white">
           <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
+          <h2 class="h5 text-black mb-3"><a href="#">Roofs over KE</a></h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
             sunt.</p>
         </div>
@@ -249,37 +249,11 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
         <a href="#"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
         <div class="p-4 bg-white">
           <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-          <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
+          <h2 class="h5 text-black mb-3"><a href="#">The Boma Blog</a></h2>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae
             sunt.</p>
         </div>
       </div>
-
-      <!-- <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="100">
-            <a href="#"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt, voluptatum reprehenderit deserunt illum rem.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="200">
-            <a href="#"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt, voluptatum reprehenderit deserunt illum rem.</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up" data-aos-delay="300">
-            <a href="#"><img src="images/img_4.jpg" alt="Image" class="img-fluid"></a>
-            <div class="p-4 bg-white">
-              <span class="d-block text-secondary small text-uppercase">Jan 20th, 2019</span>
-              <h2 class="h5 text-black mb-3"><a href="#">Art Gossip by Mike Charles</a></h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias enim, ipsa exercitationem veniam quae sunt, voluptatum reprehenderit deserunt illum rem.</p>
-            </div>
-          </div> -->
-
     </div>
 
   </div>

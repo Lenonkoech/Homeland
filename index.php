@@ -60,16 +60,23 @@ $props = $select->fetchAll(PDO::FETCH_OBJ); ?>
           </div>
           <div class="col-md-3">
             <label for="select-city">Select City</label>
-            <div class="select-wrap">
-              <span class="icon icon-arrow_drop_down"></span>
-              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
-                <option value="new york">New York</option>
-                <option value="brooklyn">Brooklyn</option>
-                <option value="london">London</option>
-                <option value="japan">Japan</option>
-                <option value="philippines">Philippines</option>
-              </select>
-            </div>
+            <label for="select-city">Select Town</label>
+<div class="select-wrap">
+  <span class="icon icon-arrow_drop_down"></span>
+  <select name="select-city" id="select-city" class="form-control d-block rounded-0">
+    <option value="nairobi">Nairobi</option>
+    <option value="mombasa">Mombasa</option>
+    <option value="kisumu">Kisumu</option>
+    <option value="nakuru">Nakuru</option>
+    <option value="eldoret">Eldoret</option>
+    <option value="thika">Thika</option>
+    <option value="nyeri">Nyeri</option>
+    <option value="machakos">Machakos</option>
+    <option value="kericho">Kericho</option>
+    <option value="meru">Kajiado</option>
+  </select>
+</div>
+
           </div>
           <div class="col-md-3">
             <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">

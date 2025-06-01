@@ -1,5 +1,13 @@
 <?php require "../layout/header.php" ?>
 <?php require "../../config/config.php" ?>
+<?php
+$query = $conn->query("SELECT requests.*, props.name as property_name 
+                       FROM requests 
+                       INNER JOIN props 
+                       ON requests.prop_id = props.id");
+$query->execute();
+$requests = $query->fetchAll(PDO::FETCH_OBJ);
+?>
     <div class="container-fluid">
           <div class="row">
         <div class="col">
@@ -11,46 +19,36 @@
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">name</th>
+                    <th scope="col">User Name</th>
                     <th scope="col">email</th>
                     <th scope="col">phone</th>
-                    <th scope="col">go to this property</th>
+                    <th scope="col">property name</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>MOhamed</td>
-                    <td>moha@gmail.com</td>
-                    <td>0123040488</td>
-                     <td><a href="" class="btn btn-success  text-center ">go</a></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>MOhamed</td>
-                    <td>moha@gmail.com</td>
-                    <td>0123040488</td>
-                    <td><a href="" class="btn btn-success  text-center ">go</a></td>
-                </tr>
-                 <tr>
-                    <th scope="row">3</th>
-                    <td>MOhamed</td>
-                    <td>moha@gmail.com</td>
-                    <td>0123040488</td>
-                    <td><a href="" class="btn btn-success  text-center ">go</a></td>
-                </tr>
+                  <?php if(count($requests) > 0): ?>
+                    <?php 
+                    $counter = 1;
+                    foreach($requests as $request): 
+                    ?>
+                    <tr>
+                        <th scope="row"><?php echo $counter++; ?></th>
+                        <td><?php echo $request->name; ?></td>
+                        <td><?php echo $request->email; ?></td>
+                        <td><?php echo $request->phone; ?></td>
+                        <td><?php echo $request->property_name; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center">No requests found</td>
+                    </tr>
+                  <?php endif; ?>
                 </tbody>
               </table> 
             </div>
           </div>
         </div>
       </div>
-
-
-
-  </div>
-<script type="text/javascript">
-
-</script>
-</body>
-</html>
+    </div>
+<?php require "../layout/footer.php" ?>
