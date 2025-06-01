@@ -124,13 +124,3 @@ homeland/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details
-
-## Support
-
-For support, email support@homeland.com or create an issue in the repository.
-
-## Acknowledgments
-
-- Bootstrap for the frontend framework
-- XAMPP for the development environment
-- All contributors who have helped in the development of this project 
