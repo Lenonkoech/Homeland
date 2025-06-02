@@ -19,8 +19,14 @@ try {
     if (!defined("PAGINATION_RANGE"))
         define("PAGINATION_RANGE", 2);
 
+    // Admin email configuration
+    define('ADMINEMAIL', 'cuea1049074@gmail.com'); // Change this to your admin email address
+
     $conn = new PDO("mysql:host=" . HOSTNAME . ";dbname=" . DBNAME . ";", USER, PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Set timezone for the connection
+    $conn->exec("SET time_zone = '+03:00'"); // Set to East Africa Time (EAT)
 } catch (PDOException $e) {
     //cancel DB connection and display error message
     die("Database connection failed :" . $e->getMessage());

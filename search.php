@@ -9,7 +9,7 @@ if (isset($_POST["submit"])) {
   $types = $_POST["types"];
   $offers = $_POST["offers"];
   $cities = $_POST["cities"];
-  
+
   // Get current page number
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
   $offset = ($page - 1) * ITEMS_PER_PAGE;
@@ -177,7 +177,7 @@ if (isset($_POST["submit"])) {
             </div>
           </div>
         <?php endforeach; ?>
-      <?php else : ?>
+        <?php else : ?>
         <div class="bg-success text-white px-3">
           No property found !!!
         </div>

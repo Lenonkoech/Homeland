@@ -18,6 +18,11 @@ if (isset($_GET["type"])) {
   $select = $conn->query("SELECT * FROM props WHERE type='$type' LIMIT $offset, " . ITEMS_PER_PAGE);
   $select->execute();
   $props = $select->fetchAll(PDO::FETCH_OBJ);
+
+  // Get categories for listing types
+  $categories = $conn->query("SELECT * FROM categories");
+  $categories->execute();
+  $categories = $categories->fetchAll(PDO::FETCH_OBJ);
 } else {
   echo "<script>window.location.href='" . APPURL . "404.php'</script>";
 }
@@ -52,49 +57,54 @@ if (isset($_GET["type"])) {
   <div class="container">
     <div class="row">
       <form class="form-search col-md-12" action="search.php" method="POST" style="margin-top: -100px;">
-        <div class="row  align-items-end">
-          <div class="col-md-3">
+        <div class="row align-items-end">
+          <div class="col-md-4">
             <label for="list-types">Listing Types</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                <?php foreach ($categories as $category) : ?>
+              <select name="types" id="list-types" class="form-control d-block rounded-0" required>
+                <option value="">Select Type</option>
+                <?php foreach($categories as $category): ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="offer-types">Offer Type</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="sale">Sale</option>
-                <option value="rent">Rent</option>
-                <option value="lease">Lease</option>
+              <select name="offers" id="offers" class="form-control d-block rounded-0" required>
+                <option value="">Select type</option>
+                <option value="sale">For Sale</option>
+                <option value="rent">For Rent</option>
+                <option value="lease">For Lease</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <label for="select-city">Select City</label>
+          <div class="col-md-4">
+            <label for="select-city">Location (Optional)</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
+              <select name="cities" id="select-city" class="form-control d-block rounded-0">
+                <option value="">Any Location</option>
                 <option value="nairobi">Nairobi</option>
                 <option value="mombasa">Mombasa</option>
                 <option value="kisumu">Kisumu</option>
                 <option value="nakuru">Nakuru</option>
                 <option value="eldoret">Eldoret</option>
                 <option value="thika">Thika</option>
+                <option value="malindi">Malindi</option>
+                <option value="kakamega">Kakamega</option>
                 <option value="nyeri">Nyeri</option>
-                <option value="machakos">Machakos</option>
-                <option value="kericho">Kericho</option>
-                <option value="kajiado">Kajiado</option>
+                <option value="meru">Meru</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <input type="submit" name="submit" class="btn btn-success text-white btn-lg rounded-0" value="Search Properties">
           </div>
         </div>
       </form>

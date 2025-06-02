@@ -195,17 +195,163 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <?php if ($check->rowCount() > 0) : ?>
               <div class="form-group">
-                <a href="favs/delete-fav.php?prop_id=<?php echo $id ?>&user_id=<?php echo $_SESSION['user_id'] ?>" class="btn btn-primary">Added to Favorites</a>
+                <a href="favs/delete-fav.php?prop_id=<?php echo $id ?>&user_id=<?php echo $_SESSION['user_id'] ?>" class="btn btn-success">Added to Favorites</a>
               </div>
             <?php else: ?>
               <div class="form-group">
-                <input type="submit" class="btn btn-primary" name="submit" value="Add to Favorites">
+                <input type="submit" class="btn btn-success" name="submit" value="Add to Favorites">
               </div>
             <?php endif ?>
           </form>
         </div>
       </div>
     <?php endif; ?>
+    </div>
+
+    <!-- Property Location Map -->
+    <div class="bg-white widget border rounded">
+      <h3 class="h4 text-black widget-title mb-3 ml-0">Property Location</h3>
+      <div class="property-location">
+        <p class="mb-3">
+          <i class="icon-room mr-2"></i>
+          <?php echo htmlspecialchars($allDetails->location); ?>
+        </p>
+        <?php
+        // Format the location for maps
+        $location = $allDetails->location . ', Kenya';
+        $encodedLocation = urlencode($location);
+        $mapUrl = "https://www.google.com/maps/search/?api=1&query=" . $encodedLocation;
+        ?>
+        <div class="location-preview">
+          <a href="<?php echo $mapUrl; ?>" target="_blank" class="location-link">
+            <div class="location-image">
+              <div class="map-pattern"></div>
+              <div class="location-content">
+                <i class="icon-map-marker"></i>
+                <span>View on Google Maps</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .property-location {
+        padding: 15px;
+      }
+      
+      .property-location p {
+        font-size: 1.1rem;
+        color: #666;
+      }
+      
+      .location-preview {
+        width: 100%;
+        height: 200px;
+        background: #2c3e50;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      }
+      
+      .location-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+      }
+      
+      .location-image {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .map-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #34495e;
+        background-image: 
+          linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+
+      .map-pattern::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 50% 50%, 
+            rgba(52, 152, 219, 0.2) 0%,
+            transparent 50%),
+          linear-gradient(45deg,
+            rgba(52, 152, 219, 0.1) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(52, 152, 219, 0.1) 50%,
+            rgba(52, 152, 219, 0.1) 75%,
+            transparent 75%,
+            transparent);
+        background-size: 100% 100%, 10px 10px;
+      }
+      
+      .location-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(44, 62, 80, 0.7);
+        transition: all 0.3s ease;
+      }
+      
+      .location-image:hover .location-content {
+        background: rgba(44, 62, 80, 0.8);
+      }
+      
+      .location-content i {
+        font-size: 3.5rem;
+        color: #3498db;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      
+      .location-content span {
+        font-size: 1.2rem;
+        color: #fff;
+        text-align: center;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        letter-spacing: 0.5px;
+      }
+    </style>
     </div>
 
   </div>

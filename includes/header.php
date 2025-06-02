@@ -3,11 +3,17 @@ session_start();
 define("APPURL", 'http://localhost/homeland/');
 define("IMAGESURL", 'http://localhost/homeland/admin-panel/properties-admins');
 require dirname(dirname(__FILE__)) . '/config/config.php';
+require_once dirname(dirname(__FILE__)) . '/includes/functions.php';
 
 $select = $conn->query("SELECT * from categories");
 $select->execute();
 $categories = $select->fetchAll(PDO::FETCH_OBJ);
 
+// Get unread notification count if user is logged in
+$unread_count = 0;
+if (isset($_SESSION['user_id'])) {
+    $unread_count = getUnreadNotificationCount($_SESSION['user_id']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +26,7 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
   <link rel="stylesheet" href="fonts/icomoon/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/magnific-popup.css">
@@ -37,6 +44,32 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
 
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/style.css">
 
+  <style>
+    .notification-badge {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      padding: 2px 6px;
+      border-radius: 12px;
+      background: #dc3545;
+      color: white;
+      font-size: 0.7rem;
+      display: none;
+      min-width: 18px;
+      height: 18px;
+      line-height: 14px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .notification-badge.show {
+      display: inline-block;
+    }
+    .dropdown-item {
+      position: relative;
+      padding-right: 35px;
+    }
+  </style>
 </head>
 
 <body>
@@ -45,64 +78,98 @@ $categories = $select->fetchAll(PDO::FETCH_OBJ);
 
   <div class="site-wrap">
 
-    <div class="site-mobile-menu">
-      <div class="site-mobile-menu-header">
-        <div class="site-mobile-menu-close mt-3">
-          <span class="icon-close2 js-menu-toggle"></span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="<?php echo APPURL; ?>">
+          <strong class=" h4 h2-lg">Qejani<span class="text-danger">Connect</span></strong>
+        </a>
+
+        <!-- Hamburger menu button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Nav links -->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav d-flex align-items-center mx-n2">
+            <li class="nav-item active">
+              <a class="nav-link" href="<?php echo APPURL; ?>index.php">Home</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>sale.php?type=sale">Buy</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>rent.php?type=rent">Rent</a></li>
+
+            <!-- Categories dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Properties
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <?php foreach ($categories as $category): ?>
+                  <a class="dropdown-item"
+                    href="<?php echo APPURL; ?>properties.php?home_type=<?php echo str_replace(' ', '-', $category->name); ?>">
+                    <?php echo $category->name; ?>
+                  </a>
+                <?php endforeach; ?>
+              </div>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>contact.php">Contact</a></li>
+
+            <?php if (isset($_SESSION['username'])): ?>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="userDropdown" role="button"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <?php echo $_SESSION['username']; ?>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="<?php echo APPURL; ?>user/favorites.php">Favorites</a>
+                  <a class="dropdown-item" href="<?php echo APPURL; ?>user/requests.php">Requests</a>
+                  <a class="dropdown-item" href="<?php echo APPURL; ?>features/notifications/view-notifications.php">
+                    Notifications
+                    <span class="notification-badge <?php echo $unread_count > 0 ? 'show' : ''; ?>" id="notification-count">
+                      <?php echo $unread_count; ?>
+                    </span>
+                  </a>
+                  <a class="dropdown-item" href="<?php echo APPURL; ?>auth/logout.php">Logout</a>
+                </div>
+              </li>
+            <?php else: ?>
+              <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>auth/login.php">Login</a></li>
+              <li class="nav-item"><a class="nav-link" href="<?php echo APPURL; ?>auth/register.php">Register</a></li>
+            <?php endif; ?>
+          </ul>
         </div>
       </div>
-      <div class="site-mobile-menu-body"></div>
-    </div> <!-- .site-mobile-menu -->
-
-    <div class="site-navbar mt-4">
-      <div class="container py-1">
-        <div class="row align-items-center">
-          <div class="col-8 col-md-8 col-lg-4">
-            <h1 class="mb-0"><a href="<?php echo APPURL; ?>" class="text-white h2 mb-0"><strong>Qejani<span
-                    class="text-danger">Connect</span></strong></a></h1>
-          </div>
-          <div class="col-4 col-md-4 col-lg-8">
-            <nav class="site-navigation text-right text-md-right" role="navigation">
-
-              <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#"
-                  class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
-
-              <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="active">
-                  <a href="<?php echo APPURL; ?>index.php">Home</a>
-                </li>
-                <li><a href="<?php echo APPURL; ?>sale.php?type=sale">Buy</a></li>
-                <li><a href="<?php echo APPURL; ?>rent.php?type=rent">Rent</a></li>
-                <li class="has-children "><a href="">Properties</a>
-                  <ul class="dropdown arrow-top">
-                    <?php foreach ($categories as $category) : ?>
-                      <li><a href="<?php echo APPURL; ?>properties.php?home_type=<?php echo str_replace(' ', '-', $category->name); ?>"><?php echo $category->name; ?></a></li>
-                    <?php endforeach; ?>
-                  </ul>
-                </li>
-                <li><a href="<?php echo APPURL; ?>about.php">About</a></li>
-                <li><a href="<?php echo APPURL; ?>contact.php">Contact</a></li>
-
-                <?php if (isset($_SESSION['username'])) : ?>
-
-                  <li class="has-children">
-                    <a href="#"><?php echo $_SESSION['username'] ?><?php echo "&nbsp&nbsp&nbsp"; ?></a>
-                    <ul class="dropdown arrow-top">
-                      <li><a href="<?php echo APPURL; ?>user/favorites.php">Favorites</a></li>
-                      <li><a href="<?php echo APPURL; ?>user/requests.php">Requests</a></li>
-                      <li><a href="<?php echo APPURL; ?>auth/logout.php">Logout</a></li>
-                    </ul>
-                  </li>
-                <?php else : ?>
-                  <li><a href="<?php echo APPURL; ?>auth/login.php">Login</a></li>
-                  <li><a href="<?php echo APPURL; ?>auth/register.php">Register</a></li>
-                <?php endif; ?>
-              </ul>
-            </nav>
-          </div>
-
-
-        </div>
-      </div>
-    </div>
+    </nav>
   </div>
+
+  <script>
+  function updateNotificationCount() {
+    fetch('<?php echo APPURL; ?>features/notifications/get-unread-count.php')
+    .then(response => response.json())
+    .then(data => {
+      const countElement = document.getElementById('notification-count');
+      if (countElement) {
+        countElement.textContent = data.count;
+        if (data.count === 0) {
+          countElement.classList.remove('show');
+        } else {
+          countElement.classList.add('show');
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  // Update notification count every 30 seconds
+  setInterval(updateNotificationCount, 30000);
+
+  // Update notification count when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    updateNotificationCount();
+  });
+  </script>

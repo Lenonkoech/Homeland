@@ -6,7 +6,8 @@
     <div class="row">
       <div class="col-lg-4">
         <div class="mb-5">
-          <h3 class="footer-heading mb-4">About Homeland</h3>
+          <h3 class="footer-heading mb-4">About <a href="<?php echo APPURL; ?>" class="text-white  mb-0">Qejani<span
+          class="text-danger">Connect</span></a></h3></h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe pariatur reprehenderit vero atque,
             consequatur id ratione, et non dignissimos culpa? Ut veritatis, quos illum totam quis blanditiis, minima
             minus odio!</p>

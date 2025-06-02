@@ -5,7 +5,12 @@
 if (!isset($_SESSION['username'])) {
     echo "<script>window.location.href='" . APPURL . "'</script>";
 }
-$requests = $conn->query("SELECT props.id as id,props.name as name, props.location as location,props.image as image,props.beds as beds,props.price as price,props.baths as baths,props.sqft as sqft,props.type as type FROM props JOIN requests on props.id =requests.prop_id where requests.user_id = $_SESSION[user_id]");
+$requests = $conn->query("SELECT props.id as id, props.name as name, props.location as location, props.image as image, 
+                         props.beds as beds, props.price as price, props.baths as baths, props.sqft as sqft, 
+                         props.type as type, requests.id as request_id 
+                         FROM props 
+                         JOIN requests on props.id = requests.prop_id 
+                         WHERE requests.user_id = $_SESSION[user_id]");
 $requests->execute();
 $props = $requests->fetchAll(PDO::FETCH_OBJ);
 ?>
@@ -19,12 +24,13 @@ $props = $requests->fetchAll(PDO::FETCH_OBJ);
         </div>
     </div>
 </div>
+
 <div class="site-section site-section-sm bg-light">
     <div class="container">
         <div class="row mb-5">
             <?php if (count($props) > 0): ?>
                 <?php foreach ($props as $prop) : ?>
-                    <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="col-md-6 col-lg-4 mb-4" data-request-id="<?php echo $prop->request_id; ?>">
                         <div class="property-entry h-100">
                             <a href="<?php echo APPURL; ?>property-details.php?id=<?php echo $prop->id ?>" class="property-thumbnail">
                                 <div class="offer-type-wrap">
@@ -47,20 +53,22 @@ $props = $requests->fetchAll(PDO::FETCH_OBJ);
                                     <li>
                                         <span class="property-specs">Beds</span>
                                         <span class="property-specs-number"><?php echo $prop->beds; ?> <sup>+</sup></span>
-
                                     </li>
                                     <li>
                                         <span class="property-specs">Baths</span>
                                         <span class="property-specs-number"><?php echo $prop->baths ?></span>
-
                                     </li>
                                     <li>
                                         <span class="property-specs">SQ FT</span>
                                         <span class="property-specs-number"><?php echo $prop->sqft; ?></span>
-
                                     </li>
                                 </ul>
-
+                                <div class="mt-3">
+                                    <button onclick="deleteRequest(<?php echo $prop->request_id; ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash me-1"></i> Delete Request
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -71,7 +79,36 @@ $props = $requests->fetchAll(PDO::FETCH_OBJ);
                 </div>
             <?php endif; ?>
         </div>
-
     </div>
 </div>
+
+<script>
+function deleteRequest(requestId) {
+    if (confirm('Are you sure you want to delete this request?')) {
+        const formData = new FormData();
+        formData.append('request_id', requestId);
+
+        fetch('delete-request.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove the property card from the page
+                const propertyCard = document.querySelector(`[data-request-id="${requestId}"]`);
+                if (propertyCard) {
+                    propertyCard.remove();
+                }
+                // Reload the page to update the list
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+</script>
+
 <?php require "../includes/footer.php" ?>

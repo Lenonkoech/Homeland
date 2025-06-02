@@ -15,6 +15,11 @@ $totalPages = ceil($total / ITEMS_PER_PAGE);
 $select = $conn->query("SELECT * FROM props LIMIT $offset, " . ITEMS_PER_PAGE);
 $select->execute();
 $props = $select->fetchAll(PDO::FETCH_OBJ);
+
+// Get categories for listing types
+$categories = $conn->query("SELECT * FROM categories");
+$categories->execute();
+$categories = $categories->fetchAll(PDO::FETCH_OBJ);
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">
@@ -46,83 +51,64 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
   <div class="container">
     <div class="row">
       <form class="form-search col-md-12" action="search.php" method="POST" style="margin-top: -100px;">
-        <div class="row  align-items-end">
-          <div class="col-md-3">
+        <div class="row align-items-end">
+          <div class="col-md-4">
             <label for="list-types">Listing Types</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="list-types" id="list-types" class="form-control d-block rounded-0">
-                <?php foreach ($categories as $category) : ?>
+              <select name="types" id="list-types" class="form-control d-block rounded-0" required>
+                <option value="">Select Type</option>
+                <?php foreach($categories as $category): ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="offer-types">Offer Type</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="offer-types" id="offer-types" class="form-control d-block rounded-0">
-                <option value="sale">Sale</option>
-                <option value="rent">Rent</option>
-                <option value="lease">Lease</option>
+              <select name="offers" id="offers" class="form-control d-block rounded-0" required>
+                <option value="">Select type</option>
+                <option value="sale">For Sale</option>
+                <option value="rent">For Rent</option>
+                <option value="lease">For Lease</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <label for="select-city">Select City</label>
+          <div class="col-md-4">
+            <label for="select-city">Location (Optional)</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
+              <select name="cities" id="select-city" class="form-control d-block rounded-0">
+                <option value="">Any Location</option>
                 <option value="nairobi">Nairobi</option>
                 <option value="mombasa">Mombasa</option>
                 <option value="kisumu">Kisumu</option>
                 <option value="nakuru">Nakuru</option>
                 <option value="eldoret">Eldoret</option>
                 <option value="thika">Thika</option>
+                <option value="malindi">Malindi</option>
+                <option value="kakamega">Kakamega</option>
                 <option value="nyeri">Nyeri</option>
-                <option value="machakos">Machakos</option>
-                <option value="kericho">Kericho</option>
-                <option value="kajiado">Kajiado</option>
+                <option value="meru">Meru</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <input type="submit" name="submit" class="btn btn-success text-white btn-lg rounded-0" value="Search Properties">
           </div>
         </div>
       </form>
     </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="view-options bg-white py-3 px-3 d-md-flex align-items-center">
-          <div class="mr-auto">
-            <a href="index.html" class="icon-view view-module active"><span class="icon-view_module"></span></a>
-            <a href="view-list.php" class="icon-view view-list"><span class="icon-view_list"></span></a>
-
-          </div>
-          <div class="ml-auto d-flex align-items-center">
-            <div>
-              <a href="<?php APPURL; ?>" class="view-list px-3 border-right active">All</a>
-              <a href="<?php APPURL; ?>rent.php?type=rent" class="view-list px-3 border-right">Rent</a>
-              <a href="<?php APPURL; ?>sale.php?type=sale" class="view-list px-3 border-right">Sale</a>
-              <a href="<?php APPURL; ?>lease.php?type=lease" class="view-list px-3 border-right">Lease</a>
-              <a href="<?php APPURL; ?>price.php?price=ASC" class="view-list px-3 border-right">Price Ascending</a>
-              <a href="<?php APPURL; ?>price.php?price=DESC" class="view-list px-3">Price Descending</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <div class="site-section site-section-sm bg-light">
   <div class="container">
-
-    <div class="row mb-5">
+    <div class="row">
       <?php foreach ($props as $prop) : ?>
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="property-entry h-100">
@@ -147,20 +133,16 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
                 <li>
                   <span class="property-specs">Beds</span>
                   <span class="property-specs-number"><?php echo $prop->beds; ?> <sup>+</sup></span>
-
                 </li>
                 <li>
                   <span class="property-specs">Baths</span>
                   <span class="property-specs-number"><?php echo $prop->baths ?></span>
-
                 </li>
                 <li>
                   <span class="property-specs">SQ FT</span>
                   <span class="property-specs-number"><?php echo $prop->sqft; ?></span>
-
                 </li>
               </ul>
-
             </div>
           </div>
         </div>
@@ -205,7 +187,6 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
       </div>
     </div>
     <?php endif; ?>
-
   </div>
 </div>
 
@@ -253,6 +234,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
     </div>
   </div>
 </div>
+
 <div class="site-section bg-light">
   <div class="container">
     <div class="row mb-5 justify-content-center">
@@ -268,11 +250,8 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
     <div class="row">
       <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
         <div class="team-member">
-
           <img src="images/person_1.jpg" alt="Image" class="img-fluid rounded mb-4">
-
           <div class="text">
-
             <h2 class="mb-2 font-weight-light text-black h4">Megan Smith</h2>
             <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi dolorem totam non quis facere blanditiis
@@ -284,17 +263,13 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
               <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
             </p>
           </div>
-
         </div>
       </div>
 
       <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
         <div class="team-member">
-
           <img src="images/person_2.jpg" alt="Image" class="img-fluid rounded mb-4">
-
           <div class="text">
-
             <h2 class="mb-2 font-weight-light text-black h4">Brooke Cagle</h2>
             <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis, cumque vitae voluptates culpa earum
@@ -306,17 +281,13 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
               <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
             </p>
           </div>
-
         </div>
       </div>
 
       <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
         <div class="team-member">
-
           <img src="images/person_3.jpg" alt="Image" class="img-fluid rounded mb-4">
-
           <div class="text">
-
             <h2 class="mb-2 font-weight-light text-black h4">Philip Martin</h2>
             <span class="d-block mb-3 text-white-opacity-05">Real Estate Agent</span>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores illo iusto, inventore, iure dolorum
@@ -328,13 +299,10 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
               <a href="#" class="text-black p-2"><span class="icon-linkedin"></span></a>
             </p>
           </div>
-
         </div>
       </div>
-
-
-
     </div>
   </div>
 </div>
+
 <?php require "includes/footer.php" ?>

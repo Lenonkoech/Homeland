@@ -1,18 +1,30 @@
 <?php require "includes/header.php" ?>
 <?php require "config/config.php" ?>
 <?php
-$select = $conn->query("SELECT * from props");
+// Get current page number
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * ITEMS_PER_PAGE;
+
+// Get total number of properties
+$totalQuery = $conn->query("SELECT COUNT(*) as total FROM props");
+$totalQuery->execute();
+$total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+$totalPages = ceil($total / ITEMS_PER_PAGE);
+
+// Get properties for current page
+$select = $conn->query("SELECT * FROM props LIMIT $offset, " . ITEMS_PER_PAGE);
 $select->execute();
 $props = $select->fetchAll(PDO::FETCH_OBJ);
+
+// Get categories for listing types
+$categories = $conn->query("SELECT * FROM categories");
+$categories->execute();
+$categories = $categories->fetchAll(PDO::FETCH_OBJ);
 
 if (isset($_GET["home_type"])) {
   $home_type_get = $_GET["home_type"];
   $home_type = str_replace('-', ' ', $home_type_get);
   
-  // Get current page number
-  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-  $offset = ($page - 1) * ITEMS_PER_PAGE;
-
   // Get total number of matching properties
   $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props WHERE home_type LIKE '%$home_type%'");
   $totalQuery->execute();
@@ -60,49 +72,54 @@ if (isset($_GET["home_type"])) {
   <div class="container">
     <div class="row">
       <form class="form-search col-md-12" action="search.php" method="POST" style="margin-top: -100px;">
-        <div class="row  align-items-end">
-          <div class="col-md-3">
+        <div class="row align-items-end">
+          <div class="col-md-4">
             <label for="list-types">Listing Types</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="types" id="list-types" class="form-control d-block rounded-0">
-                <?php foreach ($categories as $category) : ?>
+              <select name="types" id="list-types" class="form-control d-block rounded-0" required>
+                <option value="">Select Type</option>
+                <?php foreach($categories as $category): ?>
                   <option value="<?php echo $category->name; ?>"><?php echo $category->name; ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="offer-types">Offer Type</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="offers" id="offers" class="form-control d-block rounded-0">
+              <select name="offers" id="offers" class="form-control d-block rounded-0" required>
+                <option value="">Select type</option>
                 <option value="sale">For Sale</option>
                 <option value="rent">For Rent</option>
                 <option value="lease">For Lease</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <label for="select-city">Select City</label>
+          <div class="col-md-4">
+            <label for="select-city">Location (Optional)</label>
             <div class="select-wrap">
               <span class="icon icon-arrow_drop_down"></span>
-              <select name="select-city" id="select-city" class="form-control d-block rounded-0">
+              <select name="cities" id="select-city" class="form-control d-block rounded-0">
+                <option value="">Any Location</option>
                 <option value="nairobi">Nairobi</option>
                 <option value="mombasa">Mombasa</option>
                 <option value="kisumu">Kisumu</option>
                 <option value="nakuru">Nakuru</option>
                 <option value="eldoret">Eldoret</option>
                 <option value="thika">Thika</option>
+                <option value="malindi">Malindi</option>
+                <option value="kakamega">Kakamega</option>
                 <option value="nyeri">Nyeri</option>
-                <option value="machakos">Machakos</option>
-                <option value="kericho">Kericho</option>
-                <option value="kajiado">Kajiado</option>
+                <option value="meru">Meru</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <input type="submit" name="submit" class="btn btn-success text-white btn-block rounded-0" value="Search">
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+            <input type="submit" name="submit" class="btn btn-success text-white btn-lg rounded-0" value="Search Properties">
           </div>
         </div>
       </form>

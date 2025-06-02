@@ -71,7 +71,7 @@
             <p class="mb-4"><a href="#">+254 232 3235 324</a></p>
 
             <p class="mb-0 font-weight-bold">Email Address</p>
-            <p class="mb-0"><a href="#">homeland@domain.com</a></p>
+            <p class="mb-0"><a href="#">qejaniconnect@domain.com</a></p>
 
           </div>
 

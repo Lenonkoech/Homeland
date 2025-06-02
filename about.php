@@ -6,7 +6,8 @@
   <div class="container">
     <div class="row align-items-center justify-content-center text-center">
       <div class="col-md-10">
-        <h1 class="mb-2">About Homeland</h1>
+      <h1 class="mb-0 text-white h1 mb-0">About <strong>Qejani<span
+      class="text-danger">Connect</span></strong></h1>
       </div>
     </div>
   </div>
