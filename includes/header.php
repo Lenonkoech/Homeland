@@ -1,7 +1,7 @@
 <?php
 session_start();
 define("APPURL", 'http://localhost/homeland/');
-define("IMAGESURL", 'http://localhost/homeland/admin-panel/properties-admins');
+define("USERIMAGESURL", 'http://localhost/homeland/admin-panel/properties-admins');
 require dirname(dirname(__FILE__)) . '/config/config.php';
 require_once dirname(dirname(__FILE__)) . '/includes/functions.php';
 
@@ -17,9 +17,8 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <title>Homeland</title>
+  <title>QejaniConnect</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -27,7 +26,7 @@ if (isset($_SESSION['user_id'])) {
     href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
   <link rel="stylesheet" href="fonts/icomoon/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/magnific-popup.css">
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/jquery-ui.css">

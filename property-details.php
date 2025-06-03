@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 <div class="slide-one-item home-slider owl-carousel">
-  <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo urlencode($allDetails->image); ?>);" data-aos="fade"
+  <div class="site-blocks-cover overlay" style="background-image: url(<?php echo USERIMAGESURL; ?>/thumbnails/<?php echo urlencode($allDetails->image); ?>);" data-aos="fade"
     data-stellar-background-ratio="0.5">
     <div class="container">
       <div class="row align-items-center justify-content-center text-center">
@@ -69,7 +69,7 @@ if (isset($_SESSION['user_id'])) {
 
           <div class="slide-one-item home-slider owl-carousel" id="details">
             <?php foreach ($gallery as $image): ?>
-              <div><img src="<?php echo IMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" alt="Image" class="img-fluid"></div>
+              <div><img src="<?php echo USERIMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" alt="Image" class="img-fluid"></div>
             <?php endforeach; ?>
           </div>
         </div>
@@ -121,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <?php foreach ($gallery as $image): ?>
               <div class="col-sm-6 col-md-4 col-lg-3">
-                <a href="<?php echo IMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" class="image-popup gal-item"><img src="<?php echo IMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" alt="Image"
+                <a href="<?php echo USERIMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" class="image-popup gal-item"><img src="<?php echo USERIMAGESURL; ?>/images/<?php echo urlencode($image->image); ?>" alt="Image"
                     class="img-fluid"></a>
               </div>
             <?php endforeach; ?>
@@ -384,7 +384,7 @@ if (isset($_SESSION['user_id'])) {
                                                 echo "info";
                                               } ?>"><?php echo $relatedproperty->type; ?></span>
                 </div>
-                <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo urlencode($relatedproperty->image); ?>" alt="Image" class="img-fluid">
+                <img src="<?php echo USERIMAGESURL; ?>/thumbnails/<?php echo urlencode($relatedproperty->image); ?>" alt="Image" class="img-fluid">
               </a>
               <div class="p-4 property-body">
                 <a href="#" class="property-favorite"><span class="icon-heart-o"></span></a>

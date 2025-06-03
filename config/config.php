@@ -2,6 +2,12 @@
 // Include URL configuration
 require_once __DIR__ . '/urls.php';
 
+// // Define base URLs - using absolute paths
+// define("APPURL", "http://localhost/homeland");
+// define("ADMINURL", "http://localhost/homeland/admin-panel/");
+// define("IMAGESURL", "http://localhost/homeland/admin-panel/properties-admins");
+// define("IMAGES", __DIR__ . "/../admin-panel/properties-admins/images");
+
 try {
     //host
     if (!defined('HOSTNAME'))

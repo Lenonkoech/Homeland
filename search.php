@@ -35,7 +35,7 @@ if (isset($_POST["submit"])) {
 
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>);" data-aos="fade"
+    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo USERIMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>);" data-aos="fade"
       data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
@@ -150,7 +150,7 @@ if (isset($_POST["submit"])) {
                                                 echo "info";
                                               } ?>"><?php echo $listing->type; ?></span>
                 </div>
-                <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo $listing->image; ?>" alt="Image" class="img-fluid">
+                <img src="<?php echo USERIMAGESURL; ?>/thumbnails/<?php echo $listing->image; ?>" alt="Image" class="img-fluid">
               </a>
               <div class="p-4 property-body">
                 <h2 class="property-title"><a href="property-details.html?id=<?php echo $listing->id; ?>"><?php echo $listing->name; ?></a></h2>

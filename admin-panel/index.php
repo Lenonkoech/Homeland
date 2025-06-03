@@ -1,5 +1,4 @@
 <?php require "layout/header.php" ?>
-<?php require "../config/config.php" ?>
 <?php
 if (!isset($_SESSION['adminname'])) {
   echo "<script>window.location.href='" . ADMINURL . "/admins/login-admins.php'</script>";

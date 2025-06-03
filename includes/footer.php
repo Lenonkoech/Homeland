@@ -1,5 +1,4 @@
 <?php
-//define("APPURL", 'http://localhost/homeland/');
 ?>
 <footer class="site-footer">
   <div class="container">
@@ -23,7 +22,7 @@
               <li><a href="<?php echo APPURL; ?>">Home</a></li>
               <li><a href="<?php echo APPURL; ?>sale.php?type=sale">Buy</a></li>
               <li><a href="<?php echo APPURL; ?>rent.php?type=rent">Rent</a></li>
-              <li><a href="<?php echo APPURL; ?>properties.php">Properties</a></li>
+              <li><a href="<?php echo APPURL; ?>about.php">About</a></li>
             </ul>
           </div>
           <div class="col-md-6 col-lg-6">

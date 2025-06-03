@@ -19,7 +19,7 @@ $props = $select->fetchAll(PDO::FETCH_OBJ);
 ?>
 <div class="slide-one-item home-slider owl-carousel">
   <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo urlencode($prop->image); ?>);" data-aos="fade"
+    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo USERIMAGESURL; ?>/thumbnails/<?php echo urlencode($prop->image); ?>);" data-aos="fade"
       data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">

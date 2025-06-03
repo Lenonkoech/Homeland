@@ -14,17 +14,26 @@ $base_url = $protocol . $server_name . $base_dir;
 
 // Define constants for URLs
 if (!defined('APPURL')) {
-    define('APPURL', $base_url . '/');
+    define('APPURL', $base_url . '/homeland/');  // For user side
 }
 
 if (!defined('ADMINURL')) {
-    define('ADMINURL', $base_url . '/admin-panel');
+    define('ADMINURL', $base_url . '/admin-panel');  // For admin side
 }
 
 // Define image URLs
 if (!defined('IMAGESURL')) {
-    define('IMAGESURL', $base_url . '/images');
+    define('IMAGESURL', $base_url . '/admin-panel/properties-admins');  // Base path for admin
 }
+
+if (!defined('USERIMAGESURL')) {
+    define('USERIMAGESURL', $base_url . '/homeland/admin-panel/properties-admins');  // Base path for user
+}
+
+// Define physical paths for file operations
+// if (!defined('IMAGES')) {
+    // define('IMAGES', dirname(dirname(__DIR__)) . '');
+// }
 
 // Define asset URLs
 if (!defined('CSSURL')) {

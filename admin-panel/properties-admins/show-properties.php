@@ -1,6 +1,4 @@
 <?php require "../layout/header.php" ?>
-<?php require "../../config/config.php" 
-?>
 <?php
 if (!isset($_SESSION['adminname'])) {
     echo "<script>window.location.href='" . ADMINURL . "/admins/login-admins.php'</script>";
@@ -49,219 +47,221 @@ $allProps = $stmt->fetchAll(PDO::FETCH_OBJ);
 $counter = $offset + 1;
 ?>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="card-title mb-0">Properties (<?php echo $total_items; ?>)</h5>
-                        <a href="create-properties.php" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Create Property
-                        </a>
-                    </div>
-
-                    <!-- Search Form -->
-                    <form action="" method="GET" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" 
-                                   placeholder="Search properties..." 
-                                   value="<?php echo htmlspecialchars($search); ?>">
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                            <?php if (!empty($search)): ?>
-                                <a href="show-properties.php" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times"></i> Clear
-                                </a>
-                            <?php endif; ?>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0">Properties (<?php echo $total_items; ?>)</h5>
+                            <a href="create-properties.php" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create Property
+                            </a>
                         </div>
-                    </form>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (count($allProps) > 0): ?>
-                                    <?php foreach ($allProps as $prop): ?>
-                                        <tr>
-                                            <th scope="row"><?php echo $counter++; ?></th>
-                                            <td><?php echo $prop->name; ?></td>
-                                            <td>
-                                                <strong>Ksh <?php echo $prop->price; ?></strong>
-                                            </td>
-                                            <td>
-                                                <span class="">
-                                                    <?php echo $prop->type; ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-map-marker-alt text-danger"></i>
-                                                <?php echo $prop->location; ?>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-<?php 
-                                                    echo $prop->status == 'available' ? 'success' : 
-                                                        ($prop->status == 'sold' ? 'danger' : 'warning'); 
-                                                ?>">
-                                                    <?php echo ucfirst($prop->status); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal<?php echo $prop->id; ?>">
-                                                        <i class="fas fa-eye">View</i>
-                                                    </button>
-                                                    <a href="edit-properties.php?id=<?php echo $prop->id; ?>" class="btn btn-primary btn-sm">
-                                                        <i class="fas fa-edit">Edit</i>
-                                                    </a>
-                                                    <a href="<?php echo ADMINURL; ?>/properties-admins/delete-properties.php?id=<?php echo $prop->id; ?>" 
-                                                       class="btn btn-danger btn-sm"
-                                                       onclick="return confirm('Are you sure you want to delete this property?')">
-                                                        <i class="fas fa-trash">Delete</i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
+                        <!-- Search Form -->
+                        <form action="" method="GET" class="mb-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" 
+                                    placeholder="Search properties..." 
+                                    value="<?php echo htmlspecialchars($search); ?>">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <?php if (!empty($search)): ?>
+                                    <a href="show-properties.php" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Clear
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </form>
 
-                                        <!-- View Modal for each property -->
-                                        <div class="modal fade" id="viewModal<?php echo $prop->id; ?>" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel<?php echo $prop->id; ?>" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="viewModalLabel<?php echo $prop->id; ?>"><?php echo $prop->name; ?></h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Location</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (count($allProps) > 0): ?>
+                                        <?php foreach ($allProps as $prop): ?>
+                                            <tr>
+                                                <th scope="row"><?php echo $counter++; ?></th>
+                                                <td><?php echo $prop->name; ?></td>
+                                                <td>
+                                                    <strong>Ksh <?php echo $prop->price; ?></strong>
+                                                </td>
+                                                <td>
+                                                    <span class="">
+                                                        <?php echo $prop->type; ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-map-marker-alt text-danger"></i>
+                                                    <?php echo $prop->location; ?>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<?php 
+                                                        echo $prop->status == 'available' ? 'success' : 
+                                                            ($prop->status == 'sold' ? 'danger' : 'warning'); 
+                                                    ?>">
+                                                        <?php echo ucfirst($prop->status); ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewModal<?php echo $prop->id; ?>">
+                                                            View
                                                         </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <?php if ($prop->image): ?>
-                                                                    <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>"
-                                                                         alt="<?php echo $prop->name; ?>"
-                                                                         class="img-fluid rounded mb-3">
-                                                                <?php endif; ?>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="property-details">
-                                                                    <div class="detail-item">
-                                                                        <strong>Price:</strong>
-                                                                        <p>Ksh <?php echo $prop->price; ?></p>
-                                                                    </div>
-                                                                    <div class="detail-item">
-                                                                        <strong>Type:</strong>
-                                                                        <p><?php echo $prop->type; ?></p>
-                                                                    </div>
-                                                                    <div class="detail-item">
-                                                                        <strong>Location:</strong>
-                                                                        <p><?php echo $prop->location; ?></p>
-                                                                    </div>
-                                                                    <div class="detail-item">
-                                                                        <strong>Status:</strong>
-                                                                        <p>
-                                                                            <span class="badge bg-<?php 
-                                                                                echo $prop->status == 'available' ? 'success' : 
-                                                                                    ($prop->status == 'sold' ? 'danger' : 'warning'); 
-                                                                            ?>">
-                                                                                <?php echo ucfirst($prop->status); ?>
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mt-4">
-                                                            <div class="col-12">
-                                                                <div class="detail-item">
-                                                                    <strong>Description:</strong>
-                                                                    <p><?php echo $prop->description; ?></p>
-                                                                </div>
-                                                                <div class="detail-item">
-                                                                    <strong>Features:</strong>
-                                                                    <div class="row mt-2">
-                                                                        <div class="col-md-4">
-                                                                            <div class="feature-item">
-                                                                                <i class="fas fa-bed text-primary"></i>
-                                                                                <span class="ml-2"><?php echo $prop->beds; ?> Beds</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-4">
-                                                                            <div class="feature-item">
-                                                                                <i class="fas fa-bath text-primary"></i>
-                                                                                <span class="ml-2"><?php echo $prop->baths; ?> Baths</span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-md-4">
-                                                                            <div class="feature-item">
-                                                                                <i class="fas fa-ruler-combined text-primary"></i>
-                                                                                <span class="ml-2"><?php echo $prop->sqft; ?> sqft</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <a href="edit-properties.php?id=<?php echo $prop->id; ?>" class="btn btn-primary">
-                                                            <i class="fas fa-edit"></i> Edit Property
+                                                        <a href="edit-properties.php?id=<?php echo $prop->id; ?>" class="btn btn-primary text-white btn-sm">
+                                                            Edit
                                                         </a>
+                                                        <a href="<?php echo ADMINURL; ?>/properties-admins/delete-properties.php?id=<?php echo $prop->id; ?>" 
+                                                        class="btn btn-danger btn-sm text-white"
+                                                        onclick="return confirm('Are you sure you want to delete this property?')">
+                                                            Delete
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- View Modal for each property -->
+                                            <div class="modal fade" id="viewModal<?php echo $prop->id; ?>" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel<?php echo $prop->id; ?>" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="viewModalLabel<?php echo $prop->id; ?>"><?php echo $prop->name; ?></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <?php if ($prop->image): ?>
+                                                                        <img src="<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>"
+                                                                            alt="<?php echo $prop->name; ?>"
+                                                                            class="img-fluid rounded mb-3">
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="property-details">
+                                                                        <div class="detail-item">
+                                                                            <strong>Price:</strong>
+                                                                            <p>Ksh <?php echo $prop->price; ?></p>
+                                                                        </div>
+                                                                        <div class="detail-item">
+                                                                            <strong>Type:</strong>
+                                                                            <p><?php echo $prop->type; ?></p>
+                                                                        </div>
+                                                                        <div class="detail-item">
+                                                                            <strong>Location:</strong>
+                                                                            <p><?php echo $prop->location; ?></p>
+                                                                        </div>
+                                                                        <div class="detail-item">
+                                                                            <strong>Status:</strong>
+                                                                            <p>
+                                                                                <span class="badge bg-<?php 
+                                                                                    echo $prop->status == 'available' ? 'success' : 
+                                                                                        ($prop->status == 'sold' ? 'danger' : 'warning'); 
+                                                                                ?>">
+                                                                                    <?php echo ucfirst($prop->status); ?>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mt-4">
+                                                                <div class="col-12">
+                                                                    <div class="detail-item">
+                                                                        <strong>Description:</strong>
+                                                                        <p><?php echo $prop->description; ?></p>
+                                                                    </div>
+                                                                    <div class="detail-item">
+                                                                        <strong>Features:</strong>
+                                                                        <div class="row mt-2">
+                                                                            <div class="col-md-4">
+                                                                                <div class="feature-item">
+                                                                                    <i class="fas fa-bed text-primary"></i>
+                                                                                    <span class="ml-2"><?php echo $prop->beds; ?> Beds</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <div class="feature-item">
+                                                                                    <i class="fas fa-bath text-primary"></i>
+                                                                                    <span class="ml-2"><?php echo $prop->baths; ?> Baths</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <div class="feature-item">
+                                                                                    <i class="fas fa-ruler-combined text-primary"></i>
+                                                                                    <span class="ml-2"><?php echo $prop->sqft; ?> sqft</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <a href="edit-properties.php?id=<?php echo $prop->id; ?>" class="btn btn-primary">
+                                                                <i class="fas fa-edit"></i> Edit Property
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="9" class="text-center">No properties found</td>
-                                    </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="9" class="text-center">No properties found</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <?php if ($total_pages > 1): ?>
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                <?php if ($current_page > 1): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<?php echo $current_page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
                                 <?php endif; ?>
-                            </tbody>
-                        </table>
+
+                                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?php echo $i === $current_page ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <?php if ($current_page < $total_pages): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<?php echo $current_page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </nav>
+                        <?php endif; ?>
                     </div>
-
-                    <!-- Pagination -->
-                    <?php if ($total_pages > 1): ?>
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            <?php if ($current_page > 1): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<?php echo $current_page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-
-                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <li class="page-item <?php echo $i === $current_page ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">
-                                        <?php echo $i; ?>
-                                    </a>
-                                </li>
-                            <?php endfor; ?>
-
-                            <?php if ($current_page < $total_pages): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<?php echo $current_page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </nav>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

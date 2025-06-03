@@ -1,6 +1,6 @@
 <?php
 require "../includes/header.php";
-require "../config/config.php";
+// require "../config/config.php";
 
 if (isset($_SESSION['username'])) {
   echo "<script>window.location.href='" . APPURL . "'</script>";
