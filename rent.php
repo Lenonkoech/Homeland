@@ -8,21 +8,29 @@ if (isset($_GET["type"])) {
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
   $offset = ($page - 1) * ITEMS_PER_PAGE;
 
-  // Get total number of properties for this type
-  $totalQuery = $conn->query("SELECT COUNT(*) as total FROM props WHERE type='$type'");
-  $totalQuery->execute();
-  $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
-  $totalPages = ceil($total / ITEMS_PER_PAGE);
+  try {
+    // Get total number of properties for this type
+    $totalQuery = $conn->prepare("SELECT COUNT(*) as total FROM props WHERE type = :type");
+    $totalQuery->execute([':type' => $type]);
+    $total = $totalQuery->fetch(PDO::FETCH_OBJ)->total;
+    $totalPages = ceil($total / ITEMS_PER_PAGE);
 
-  // Get properties for current page
-  $select = $conn->query("SELECT * FROM props WHERE type='$type' LIMIT $offset, " . ITEMS_PER_PAGE);
-  $select->execute();
-  $props = $select->fetchAll(PDO::FETCH_OBJ);
+    // Get properties for current page
+    $select = $conn->prepare("SELECT * FROM props WHERE type = :type ORDER BY id DESC LIMIT :limit OFFSET :offset");
+    $select->bindValue(':type', $type, PDO::PARAM_STR);
+    $select->bindValue(':limit', ITEMS_PER_PAGE, PDO::PARAM_INT);
+    $select->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $select->execute();
+    $props = $select->fetchAll(PDO::FETCH_OBJ);
 
-  // Get categories for listing types
-  $categories = $conn->query("SELECT * FROM categories");
-  $categories->execute();
-  $categories = $categories->fetchAll(PDO::FETCH_OBJ);
+    // Get categories for listing types
+    $categories = $conn->query("SELECT * FROM categories");
+    $categories->execute();
+    $categories = $categories->fetchAll(PDO::FETCH_OBJ);
+
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  }
 } else {
   echo "<script>window.location.href='" . APPURL . "404.php'</script>";
 }
@@ -30,27 +38,41 @@ if (isset($_GET["type"])) {
 ?>
 
 <div class="slide-one-item home-slider owl-carousel">
-  <?php foreach ($props as $prop) : ?>
-    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo $prop->image; ?>);" data-aos="fade"
-      data-stellar-background-ratio="0.5">
+  <?php if (count($props) > 0): ?>
+    <?php foreach ($props as $prop) : ?>
+      <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/thumbnails/<?php echo htmlspecialchars($prop->image); ?>);" data-aos="fade"
+        data-stellar-background-ratio="0.5">
+        <div class="container">
+          <div class="row align-items-center justify-content-center text-center">
+            <div class="col-md-10">
+              <span class="d-inline-block bg-<?php if ($prop->type == "rent") {
+                                                echo "success";
+                                              } else if ($prop->type == "sale") {
+                                                echo "danger";
+                                              } else {
+                                                echo "info";
+                                              } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo htmlspecialchars($prop->type); ?></span>
+              <h1 class="mb-2"><?php echo htmlspecialchars($prop->name); ?></h1>
+              <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo number_format($prop->price); ?></strong></p>
+              <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <div class="site-blocks-cover overlay" style="background-image: url(<?php echo IMAGESURL; ?>/hero_bg_1.jpg);" data-aos="fade" data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
           <div class="col-md-10">
-            <span class="d-inline-block bg-<?php if ($prop->type == "rent") {
-                                              echo "success";
-                                            } else if ($prop->type == "sale") {
-                                              echo "danger";
-                                            } else {
-                                              echo "info";
-                                            } ?> text-white px-3 mb-3 property-offer-type rounded">For <?php echo $prop->type; ?></span>
-            <h1 class="mb-2"><?php echo $prop->name; ?></h1>
-            <p class="mb-5"><strong class="h2 text-success font-weight-bold">Ksh <?php echo $prop->price; ?></strong></p>
-            <p><a href="property-details.php?id=<?php echo $prop->id ?>" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">See Details</a></p>
+            <span class="d-inline-block bg-success text-white px-3 mb-3 property-offer-type rounded">For Rent</span>
+            <h1 class="mb-2">No Properties Available</h1>
+            <p class="mb-5">Please check back later for new rental properties</p>
           </div>
         </div>
       </div>
     </div>
-  <?php endforeach; ?>
+  <?php endif; ?>
 </div>
 
 

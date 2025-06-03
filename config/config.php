@@ -1,4 +1,7 @@
 <?php
+// Include URL configuration
+require_once __DIR__ . '/urls.php';
+
 try {
     //host
     if (!defined('HOSTNAME'))

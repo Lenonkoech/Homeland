@@ -2,6 +2,7 @@
 session_start();
 define("APPURL", 'http://localhost/homeland');
 define("ADMINURL", 'http://localhost/homeland/admin-panel');
+define("IMAGESURL", 'http://localhost/homeland/admin-panel/properties-admins');
 require dirname(dirname(__FILE__)) . '../../config/config.php';
 
 ?>

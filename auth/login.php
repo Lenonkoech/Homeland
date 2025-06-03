@@ -214,7 +214,7 @@ if (isset($_POST['submit'])) {
               <input type="password" id="password" name="password" class="form-control form-control-glass" required>
             </div>
             <div class="form-group mt-4"> <!-- Added margin top for button -->
-              <button type="submit" name="submit" class="btn btn-primary btn-login" value="Login">
+              <button type="submit" name="submit" class="btn btn-success btn-login" value="Login">
                   <i class="fas fa-sign-in-alt me-2"></i> Sign In
               </button>
             </div>
@@ -224,18 +224,6 @@ if (isset($_POST['submit'])) {
           </form>
       </div>
   </div>
-</div>
-
-<!-- The rest of the site content can go in site-section below the hero -->
-<div class="site-section">
-    <div class="container">
-        <!-- Your other page content here if any -->
-         <div class="row">
-             <div class="col-md-12">
-                 <p>This is the content area below the hero section.</p>
-             </div>
-         </div>
-    </div>
 </div>
 
 <?php require "../includes/footer.php"; ?>
