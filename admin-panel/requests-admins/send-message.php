@@ -1,16 +1,13 @@
 <?php
 require "../../config/config.php";
+require_once '../../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require '../../vendor/autoload.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 if (!isset($_SESSION['adminname'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized access. Please log in.']);
@@ -27,6 +24,7 @@ $subject = $_POST['subject'];
 $message = $_POST['message'];
 
 try {
+    // Step 1: Fetch request details
     $query = $conn->prepare("SELECT r.*, u.id as user_id, u.email as user_email, u.username, p.name as property_name 
                             FROM requests r
                             INNER JOIN users u ON r.user_id = u.id
@@ -40,8 +38,9 @@ try {
         exit;
     }
 
+    // Step 2: Create notification and commit transaction immediately
     $conn->beginTransaction();
-
+    
     $notification = $conn->prepare("INSERT INTO notifications (user_id, title, message, created_at) 
                                   VALUES (:user_id, :title, :message, NOW())");
 
@@ -53,66 +52,35 @@ try {
         'message' => $notification_message
     ]);
 
-    // Email content
-    $email_message = "
-    <html>
-    <head>
-        <title>{$subject}</title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-            .content { padding: 20px; }
-            .footer { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h2>{$subject}</h2>
-            </div>
-            <div class='content'>
-                <p>Dear {$request->username},</p>
-                <p>{$message}</p>
-                <p>This message is regarding your request for the property: <strong>{$request->property_name}</strong></p>
-            </div>
-            <div class='footer'>
-                <p>Best regards,<br>QejaniConnect Administration</p>
-            </div>
-        </div>
-    </body>
-    </html>";
+    // Step 3: Queue the email
+    $email_data = [
+        'to_email' => $request->user_email,
+        'to_name' => $request->username,
+        'subject' => $subject,
+        'message' => $message,
+        'property_name' => $request->property_name
+    ];
 
-    // PHPMailer setup
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; 
-        $mail->SMTPAuth = true;
-        $mail->Username = ADMINEMAIL; // Use admin email from config
-        $mail->Password = 'your_app_password';    // Use App Password for the admin email
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-
-        $mail->setFrom(ADMINEMAIL, 'QejaniConnect Admin'); // Use admin email from config
-        $mail->addAddress($request->user_email, $request->username); // Send to user's email
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body = $email_message;
-
-        $mail->send();
-    } catch (Exception $e) {
-        throw new Exception("Mail error: " . $mail->ErrorInfo);
-    }
+    $queue = $conn->prepare("INSERT INTO email_queue (data, status, created_at) VALUES (:data, 'pending', NOW())");
+    $queue->execute(['data' => json_encode($email_data)]);
 
     $conn->commit();
-    echo json_encode(['success' => true, 'message' => 'Message sent successfully']);
+
+    // Return success response immediately
+    echo json_encode([
+        'success' => true,
+        'message' => 'Message sent successfully! The email will be delivered shortly.'
+    ]);
+    exit;
 
 } catch (Exception $e) {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Error: ' . $e->getMessage()
+    ]);
 }
 ?>
  

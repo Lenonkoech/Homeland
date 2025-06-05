@@ -24,7 +24,7 @@ if (isset($_SESSION['user_id'])) {
 
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,700,900|Roboto+Mono:300,400,500">
-  <link rel="stylesheet" href="fonts/icomoon/style.css">
+  <link rel="stylesheet" href="fonts/icomoon/style.php">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/bootstrap.min.css">
@@ -42,6 +42,9 @@ if (isset($_SESSION['user_id'])) {
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/aos.css">
 
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/style.css">
+
+  <!-- Load EmailHandler before any scripts that might use it -->
+  <script src="<?php echo APPURL; ?>js/email-handler.js"></script>
 
   <style>
     .notification-badge {

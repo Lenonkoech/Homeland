@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../config/config.php';
+
 function createNotification($userId, $title, $message) {
     global $conn;
     
@@ -54,15 +56,6 @@ function getNotificationCount($userId) {
     return $stmt->fetch(PDO::FETCH_OBJ)->count;
 }
 
-// Function to send email notifications
-function sendEmailNotification($to, $subject, $message) {
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= 'From: QejaniConnect <noreply@qejaniconnect.com>' . "\r\n";
-    
-    return mail($to, $subject, $message, $headers);
-}
-
 // Function to handle price change notifications
 function checkPriceChanges() {
     global $conn;
@@ -80,7 +73,6 @@ function checkPriceChanges() {
     foreach ($priceChanges as $change) {
         $message = "The price of {$change->name} has been updated to {$change->price}";
         createNotification($change->user_id, "Price Update", $message);
-        sendEmailNotification($change->email, "Property Price Update", $message);
     }
 }
 
@@ -100,7 +92,6 @@ function notifyNewProperties() {
     foreach ($newProperties as $property) {
         $message = "A new property matching your saved search has been listed: {$property->name}";
         createNotification($property->user_id, "New Property", $message);
-        sendEmailNotification($property->email, "New Property Alert", $message);
     }
 }
 ?> 

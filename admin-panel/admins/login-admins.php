@@ -245,13 +245,13 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" class="form-control form-control-glass" required>
-                    </div>
+            </div>
                     <div class="form-group mt-4">
                         <button type="submit" name="submit" class="btn btn-primary btn-admin-login">
                             <i class="fas fa-sign-in-alt me-2"></i> Sign In
                         </button>
             </div>
-                </form>
+          </form>
         </div>
       </div>
     </div>

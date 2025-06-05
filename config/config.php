@@ -2,11 +2,26 @@
 // Include URL configuration
 require_once __DIR__ . '/urls.php';
 
-// // Define base URLs - using absolute paths
-// define("APPURL", "http://localhost/homeland");
-// define("ADMINURL", "http://localhost/homeland/admin-panel/");
-// define("IMAGESURL", "http://localhost/homeland/admin-panel/properties-admins");
-// define("IMAGES", __DIR__ . "/../admin-panel/properties-admins/images");
+// Load environment variables from .env file
+if (!function_exists('loadEnv')) {
+    function loadEnv($path) {
+        if (file_exists($path)) {
+            $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos($line, '=') !== false && strpos($line, '#') !== 0) {
+                    list($key, $value) = explode('=', $line, 2);
+                    $key = trim($key);
+                    $value = trim($value);
+                    putenv("$key=$value");
+                    $_ENV[$key] = $value;
+                }
+            }
+        }
+    }
+}
+
+// Load .env file
+loadEnv(__DIR__ . '/.env');
 
 try {
     //host
@@ -29,7 +44,8 @@ try {
         define("PAGINATION_RANGE", 2);
 
     // Admin email configuration
-    define('ADMINEMAIL', 'cuea1049074@gmail.com'); // Change this to your admin email address
+    if (!defined('ADMINEMAIL'))
+        define('ADMINEMAIL', 'kipyegonlenon226s@gmail.com'); // Change this to your admin email address
 
     $conn = new PDO("mysql:host=" . HOSTNAME . ";dbname=" . DBNAME . ";", USER, PASS);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -40,3 +56,9 @@ try {
     //cancel DB connection and display error message
     die("Database connection failed :" . $e->getMessage());
 }
+
+// Remove SMTP settings since we're using Node.js email service
+// define('SMTP_HOST', 'smtp.brevo.com');
+// define('SMTP_PORT', 587);
+// define('SMTP_USERNAME', 'your-username');
+// define('SMTP_PASSWORD', 'your-password');

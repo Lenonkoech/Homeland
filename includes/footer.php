@@ -71,7 +71,7 @@
 </footer>
 
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo APPURL; ?>js/jquery-3.3.1.min.js"></script>
 <script src="<?php echo APPURL; ?>js/jquery-migrate-3.0.1.min.js"></script>
 <script src="<?php echo APPURL; ?>js/jquery-ui.js"></script>
