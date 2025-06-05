@@ -60,7 +60,7 @@ function getNotificationCount($userId) {
 function checkPriceChanges() {
     global $conn;
     
-    $query = "SELECT p.*, u.email 
+    $query = "SELECT p.*, u.id as user_id 
               FROM properties p 
               INNER JOIN saved_properties sp ON p.id = sp.property_id 
               INNER JOIN users u ON sp.user_id = u.id 
@@ -80,7 +80,7 @@ function checkPriceChanges() {
 function notifyNewProperties() {
     global $conn;
     
-    $query = "SELECT u.id as user_id, u.email, p.* 
+    $query = "SELECT u.id as user_id, p.* 
               FROM users u 
               INNER JOIN saved_searches ss ON u.id = ss.user_id 
               INNER JOIN properties p ON p.created_at > DATE_SUB(NOW(), INTERVAL 1 DAY)";

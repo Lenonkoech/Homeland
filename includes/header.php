@@ -43,9 +43,6 @@ if (isset($_SESSION['user_id'])) {
 
   <link rel="stylesheet" href="<?php echo APPURL; ?>css/style.css">
 
-  <!-- Load EmailHandler before any scripts that might use it -->
-  <script src="<?php echo APPURL; ?>js/email-handler.js"></script>
-
   <style>
     .notification-badge {
       position: absolute;

@@ -145,55 +145,6 @@ try {
     ]);
     error_log("Notification created for user_id: " . $request->user_id);
 
-    // Send email notification
-    $to = $request->user_email;
-    $subject = "Property Request {$status_message}";
-    
-    // Use a fallback email if ADMINEMAIL is not defined
-    $admin_email = defined('ADMINEMAIL') ? ADMINEMAIL : 'admin@homeland.com';
-    
-    $headers = "From: " . $admin_email . "\r\n";
-    $headers .= "Reply-To: " . $admin_email . "\r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-    $email_message = "
-    <html>
-    <head>
-        <title>{$subject}</title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-            .content { padding: 20px; }
-            .footer { text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
-            .note { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 20px; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h2>{$subject}</h2>
-            </div>
-            <div class='content'>
-                <p>Dear {$request->username},</p>
-                <p>{$message}</p>
-                <p>Property: <strong>{$request->property_name}</strong></p>
-                <p>Request Type: <strong>{$request->property_type}</strong></p>
-                <p>Price: <strong>Ksh {$request->price}</strong></p>
-                " . (!empty($note) ? "<div class='note'><strong>Note from admin:</strong><br><br>{$note}</div>" : "") . "
-            </div>
-            <div class='footer'>
-                <p>Best regards,<br>Homeland Administration</p>
-            </div>
-        </div>
-    </body>
-    </html>";
-
-    // Send email
-    $mail_sent = mail($to, $subject, $email_message, $headers);
-    error_log("Email " . ($mail_sent ? "sent" : "failed to send") . " to: " . $to);
-
     // Commit transaction
     $conn->commit();
     error_log("Transaction committed successfully");
@@ -202,7 +153,7 @@ try {
     ob_end_clean();
 
     // Return success response
-    sendJsonResponse(true, 'Request status updated successfully' . ($mail_sent ? ' and notification sent' : ' but email notification failed'));
+    sendJsonResponse(true, 'Request status updated successfully');
 
 } catch (PDOException $e) {
     // Rollback transaction on error
