@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 03, 2025 at 08:03 AM
+-- Generation Time: Jun 05, 2025 at 03:47 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -113,6 +113,30 @@ CREATE TABLE `contact_messages` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `email_queue`
+--
+
+CREATE TABLE `email_queue` (
+  `id` int(11) NOT NULL,
+  `to_email` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('pending','sent','failed') NOT NULL DEFAULT 'pending',
+  `error` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `email_queue`
+--
+
+INSERT INTO `email_queue` (`id`, `to_email`, `subject`, `message`, `status`, `error`, `created_at`, `updated_at`) VALUES
+(1, 'user@example.com', 'Property Request Approved - 625 Nyotu Road ', '\n        <h2>Property Request Update</h2>\n        <p>Dear User,</p>\n        <p>Your request for the property \'625 Nyotu Road \' has been approved.</p>\n        <p><strong>Property Details:</strong></p>\n        <ul>\n            <li>Type: lease</li>\n            <li>Price: $4,000,000.00</li>\n        </ul>\n        <p>Thank you for using our service.</p>\n        <p>Best regards,<br>Homeland Team</p>', 'sent', NULL, '2025-06-05 13:46:06', '2025-06-05 13:46:20');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fav`
 --
 
@@ -153,12 +177,49 @@ CREATE TABLE `notifications` (
 --
 
 INSERT INTO `notifications` (`id`, `user_id`, `title`, `message`, `is_read`, `created_at`) VALUES
-(24, 3, 'Request Deleted', 'Your property request has been successfully deleted.', 0, '2025-06-02 14:21:03'),
-(25, 3, 'Property Request Sent', 'You have sent a request for the property: 625 Nyotu Road ', 1, '2025-06-02 14:21:21'),
-(26, 3, 'Request Approved', 'Your request for property \'625 Nyotu Road \' has been approved.\n\nNote from admin:\nRequest has been approved', 1, '2025-06-02 14:22:16'),
-(27, 3, 'Request Pending', 'Your request for property \'625 Nyotu Road \' has been pending.', 0, '2025-06-02 14:28:47'),
-(28, 3, 'Request Rejected', 'Your request for property \'625 Nyotu Road \' has been rejected.', 0, '2025-06-02 14:31:43'),
-(29, 3, 'Request Approved', 'Your request for property \'625 Nyotu Road \' has been approved.', 0, '2025-06-02 14:36:55');
+(42, 4, 'Property Request Sent', 'You have sent a request for the property: 567 Bogani Rd', 0, '2025-06-03 10:56:06'),
+(43, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-03 10:56:17'),
+(44, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-03 11:01:29'),
+(45, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-03 11:19:22'),
+(46, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-03 11:59:00'),
+(47, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-04 09:30:15'),
+(48, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 06:40:15'),
+(51, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 07:10:59'),
+(52, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 07:25:04'),
+(53, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 07:29:21'),
+(55, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 07:31:47'),
+(56, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 07:34:11'),
+(57, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 09:04:23'),
+(58, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 09:09:35'),
+(59, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 09:28:29'),
+(60, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 09:30:52'),
+(61, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 09:44:51'),
+(62, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 09:49:56'),
+(63, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 09:52:15'),
+(64, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 09:54:29'),
+(65, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 10:14:24'),
+(66, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:19:27'),
+(67, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 10:19:39'),
+(68, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:21:47'),
+(69, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:28:28'),
+(70, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:30:47'),
+(71, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:30:55'),
+(72, 4, 'Request Rejected', 'Your request for property \'567 Bogani Rd\' has been rejected.', 0, '2025-06-05 10:37:45'),
+(73, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:41:01'),
+(74, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:43:59'),
+(75, 4, 'Request Rejected', 'Your request for property \'567 Bogani Rd\' has been rejected.', 0, '2025-06-05 10:49:03'),
+(76, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 10:50:25'),
+(77, 4, 'Request Rejected', 'Your request for property \'567 Bogani Rd\' has been rejected.', 0, '2025-06-05 10:51:51'),
+(78, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 10:52:55'),
+(81, 4, 'Request Rejected', 'Your request for property \'567 Bogani Rd\' has been rejected.', 0, '2025-06-05 10:59:34'),
+(82, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 11:00:36'),
+(84, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 11:00:55'),
+(85, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 11:02:15'),
+(86, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 11:08:24'),
+(87, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 11:09:11'),
+(88, 4, 'Request Pending', 'Your request for property \'567 Bogani Rd\' has been pending.', 0, '2025-06-05 11:17:59'),
+(89, 4, 'Request Approved', 'Your request for property \'567 Bogani Rd\' has been approved.', 0, '2025-06-05 11:37:16'),
+(92, 3, 'Request Approved', 'Your request for property \'625 Nyotu Road \' has been approved.', 0, '2025-06-05 13:46:06');
 
 -- --------------------------------------------------------
 
@@ -326,7 +387,8 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`id`, `name`, `email`, `phone`, `prop_id`, `user_id`, `agent_name`, `timestamp`, `status`, `updated_at`) VALUES
-(18, 'James Kamoto', 'user@example.com', '07123456789', 16, 3, 'SudoAdmin', '2025-06-02 14:21:21', 'approved', '2025-06-02 14:36:55');
+(18, 'James Kamoto', 'user@example.com', '07123456789', 16, 3, 'SudoAdmin', '2025-06-02 14:21:21', 'approved', '2025-06-05 13:46:06'),
+(19, 'Lenon Koech', 'koechlenon@gmail.com', '07123456789', 19, 4, 'SudoAdmin', '2025-06-03 10:56:06', 'approved', '2025-06-05 11:37:16');
 
 -- --------------------------------------------------------
 
@@ -377,7 +439,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `mypassword`, `two_factor_enabled`, `two_factor_secret`, `last_login`, `notification_preferences`) VALUES
-(3, 'User', 'user@example.com', '$2y$10$yb7Ew4vasY7WIhyig9xspuzNcF7mOZaiP00TSF5saZRKA4p9Gwj.G', 0, NULL, NULL, NULL);
+(3, 'User', 'user@example.com', '$2y$10$yb7Ew4vasY7WIhyig9xspuzNcF7mOZaiP00TSF5saZRKA4p9Gwj.G', 0, NULL, NULL, NULL),
+(4, 'Lenon', 'koechlenon@gmail.com', '$2y$10$QDF/s3VAAQd.WSiP2azr6.BLrigOLtLCBRNgCGiMZMUY4L1vbBqvG', 0, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -414,6 +477,14 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `contact_messages`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `email_queue`
+--
+ALTER TABLE `email_queue`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `status` (`status`),
+  ADD KEY `created_at` (`created_at`);
 
 --
 -- Indexes for table `fav`
@@ -528,6 +599,12 @@ ALTER TABLE `contact_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `email_queue`
+--
+ALTER TABLE `email_queue`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `fav`
 --
 ALTER TABLE `fav`
@@ -537,7 +614,7 @@ ALTER TABLE `fav`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `property_features`
@@ -573,7 +650,7 @@ ALTER TABLE `props_gallery`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `saved_properties`
@@ -591,7 +668,7 @@ ALTER TABLE `saved_searches`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

@@ -1,117 +1,146 @@
 # Homeland - Real Estate Management System
 
-A comprehensive real estate management system built with PHP, MySQL, and Bootstrap. This system allows users to browse properties, make requests, and manage real estate listings.
+A comprehensive real estate management system built with PHP and Node.js.
 
 ## Features
 
-### For Users
-- User registration and login
-- Browse available properties
-- Search properties by location, price, and type
-- View detailed property information
-- Make property requests
-- View request history
-- Update profile information
+- Property listings (Buy, Rent, Lease)
+- User authentication
+- Admin panel
+- Property requests
+- Email notifications
+- Favorites system
+- Search functionality
+- Responsive design
 
-### For Admins
-- Admin dashboard
-- Manage properties (Add, Edit, Delete)
-- View and manage property requests
-- User management
-- Property type management
-- Location management
+## Requirements
 
-## Prerequisites
-
-- XAMPP (PHP 7.4 or higher)
-- MySQL
-- Web browser
-- Git
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Node.js 14 or higher
+- XAMPP (recommended for local development)
+- Composer (for PHP dependencies)
+- npm (for Node.js dependencies)
 
 ## Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Lenonkoech/Homeland.git
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/homeland.git
+cd homeland
+```
+
+2. Set up the database:
+   - Create a new database named `homeland` in phpMyAdmin
+   - Import the database schema from `database/homeland.sql`
+
+3. Configure environment variables:
+   - Create a `.env` file in the project root:
+   ```env
+   # Database Configuration
+   DB_HOST=localhost
+   DB_PORT=3307
+   DB_USER=root
+   DB_PASSWORD=
+   DB_NAME=homeland
+
+   # Email Configuration (Mailtrap)
+   SMTP_HOST=smtp.mailtrap.io
+   SMTP_PORT=2525
+   SMTP_USER=your_mailtrap_username
+   SMTP_PASS=your_mailtrap_password
+   SMTP_FROM=noreply@homeland.com
+
+   # Application Settings
+   APP_URL=http://localhost/homeland
+   APP_NAME=Homeland
+   APP_ENV=local
+   APP_DEBUG=true
+
+   # Session & Security
+   SESSION_SECRET=your_session_secret
+   JWT_SECRET=your_jwt_secret
+
+   # File Upload Settings
+   UPLOAD_MAX_SIZE=5242880
+   ALLOWED_FILE_TYPES=jpg,jpeg,png,pdf,doc,docx
    ```
 
-2. **Set up XAMPP**
-   - Install XAMPP from [https://www.apachefriends.org/](https://www.apachefriends.org/)
-   - Start Apache and MySQL services from XAMPP Control Panel
+4. Install PHP dependencies:
+```bash
+composer install
+```
 
-3. **Database Setup**
-   - Open phpMyAdmin (http://localhost/phpmyadmin)
-   - Create a new database named `homeland`
-   - Import the database file from the project's `database` folder
+5. Install Node.js dependencies:
+```bash
+cd services
+npm install
+```
 
-4. **Project Setup**
-   - Copy the cloned project to `C:\xampp\htdocs\` (Windows) or `/opt/lampp/htdocs/` (Linux)
-   - Configure database connection in `config/config.php`:
-     ```php
-     $host = 'localhost';
-     $dbname = 'homeland';
-     $username = 'root';
-     $password = '';
-     ```
+6. Start the email service:
+```bash
+cd services
+node index.js
+```
 
-5. **Access the Project**
-   - Open your web browser
-   - Navigate to `http://localhost/homeland`
+7. Configure your web server:
+   - Point your web server to the project root directory
+   - Ensure the `services` directory is accessible to Node.js
+   - Make sure the `images` directory is writable
 
-## Default Credentials
+8. Access the application:
+   - Frontend: `http://localhost/homeland`
+   - Admin Panel: `http://localhost/homeland/admin-panel`
+   - Default admin credentials:
+     - Username: admin
+     - Password: admin123
 
-### Admin Access
-- Email: admin@example.com
-- Password: 1234
-
-### User Registration
-- Users can register with their email and password
-- After registration, users can log in to access their dashboard
-
-## Project Structure
+## Directory Structure
 
 ```
 homeland/
-├── admin-panel/          # Admin dashboard files
-├── assets/              # CSS, JS, and image files
+├── admin-panel/          # Admin interface
+├── auth/                 # Authentication files
 ├── config/              # Configuration files
+├── css/                 # Stylesheets
 ├── database/            # Database files
-├── includes/            # PHP includes
-├── layout/              # Layout templates
-└── user-panel/          # User dashboard files
+├── features/            # Core features
+├── images/              # Uploaded images
+├── includes/            # Common includes
+├── js/                  # JavaScript files
+├── services/            # Node.js services
+│   ├── index.js        # Email service
+│   └── package.json    # Node.js dependencies
+├── user/                # User interface
+├── .env                 # Environment variables
+└── README.md           # This file
 ```
 
-## Features in Detail
+## Recent Changes
 
-### Property Management
-- Add new properties with details (title, description, price, location, type)
-- Upload multiple property images
-- Edit and delete existing properties
-- View property statistics
+### Environment Configuration
+- Added centralized `.env` file for all configuration
+- Updated database connection to use environment variables
+- Configured email service to use environment variables
+- Added fallback values for all settings
 
-### Request Management
-- Users can make requests for properties
-- Admins can view and manage requests
-- Request status tracking
+### Email Service
+- Implemented Node.js email service
+- Added support for Mailtrap SMTP
+- Configured email queue processing
+- Added error handling and logging
 
-### User Management
-- User registration and authentication
-- Profile management
-- Password reset functionality
+### Security Updates
+- Improved session handling
+- Added environment-based configuration
+- Removed hardcoded credentials
+- Added secure password handling
 
-### Search and Filter
-- Search properties by location
-- Filter by property type
-- Price range filtering
-- Advanced search options
-
-## Security Features
-
-- Password hashing
-- SQL injection prevention
-- XSS protection
-- Input validation
-- Session management
+### Code Improvements
+- Updated file paths to use environment variables
+- Improved error handling
+- Added debugging information
+- Enhanced code organization
 
 ## Contributing
 
@@ -123,4 +152,4 @@ homeland/
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the MIT License - see the LICENSE file for details.

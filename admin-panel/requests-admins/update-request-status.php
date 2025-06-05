@@ -145,6 +145,36 @@ try {
     ]);
     error_log("Notification created for user_id: " . $request->user_id);
 
+    // Queue email to user about status update
+    require_once "../../includes/queue-email.php";
+    
+    $email_subject = "Property Request {$status_message} - {$request->property_name}";
+    $email_message = "
+        <h2>Property Request Update</h2>
+        <p>Dear {$request->username},</p>
+        <p>Your request for the property '{$request->property_name}' has been {$status}.</p>
+        <p><strong>Property Details:</strong></p>
+        <ul>
+            <li>Type: {$request->property_type}</li>
+            <li>Price: $" . number_format($request->price, 2) . "</li>
+        </ul>";
+
+    if (!empty($note)) {
+        $email_message .= "<p><strong>Note from admin:</strong><br>{$note}</p>";
+    }
+
+    $email_message .= "
+        <p>Thank you for using our service.</p>
+        <p>Best regards,<br>Homeland Team</p>";
+
+    // Queue the email
+    $email_id = queueEmail($request->user_email, $email_subject, $email_message);
+    if ($email_id) {
+        error_log("Email queued successfully with ID: " . $email_id);
+    } else {
+        error_log("Failed to queue email for user: " . $request->user_email);
+    }
+
     // Commit transaction
     $conn->commit();
     error_log("Transaction committed successfully");

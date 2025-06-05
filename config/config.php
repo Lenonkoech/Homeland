@@ -20,8 +20,8 @@ if (!function_exists('loadEnv')) {
     }
 }
 
-// Load .env file
-loadEnv(__DIR__ . '/.env');
+// Load .env file from project root
+loadEnv(__DIR__ . '/../.env');
 
 try {
     //host
