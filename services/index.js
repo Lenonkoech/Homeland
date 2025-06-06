@@ -1,19 +1,102 @@
 const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
 const path = require('path');
+const fs = require('fs');
+
+// Load environment variables
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
-// Database configuration
-const dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3307,  // XAMPP MySQL port
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',  // No password for XAMPP default
-    database: process.env.DB_NAME || 'homeland',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-};
+// Function to check if MySQL is XAMPP's
+async function isXamppMySQL(connection) {
+    try {
+        // Check if it's MariaDB
+        const [versionRows] = await connection.query("SHOW VARIABLES LIKE 'version'");
+        if (!versionRows.length || !versionRows[0].Value.includes('MariaDB')) {
+            return false;
+        }
+
+        // Check if it's running from XAMPP directory
+        const [dataDirRows] = await connection.query("SHOW VARIABLES LIKE 'datadir'");
+        if (!dataDirRows.length || !dataDirRows[0].Value.includes('/opt/lampp/')) {
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+// Function to find MySQL port
+async function findMySQLPort() {
+    // Try XAMPP's default port first
+    const xamppPort = 3307;
+    try {
+        const connection = await mysql.createConnection({
+            host: 'localhost',
+            port: xamppPort,
+            user: 'root',
+            password: ''
+        });
+
+        if (await isXamppMySQL(connection)) {
+            await connection.end();
+            return xamppPort;
+        }
+        await connection.end();
+    } catch (error) {
+    }
+
+    // Try other common ports
+    const ports = [3306, 3308, 3309, 3310];
+    for (const port of ports) {
+        try {
+            const connection = await mysql.createConnection({
+                host: 'localhost',
+                port: port,
+                user: 'root',
+                password: ''
+            });
+
+            if (await isXamppMySQL(connection)) {
+                await connection.end();
+                return port;
+            }
+            await connection.end();
+        } catch (error) {
+        }
+    }
+
+    throw new Error('No XAMPP MySQL port found. Please make sure XAMPP is running.');
+}
+
+// Initialize database configuration
+async function initializeDB() {
+    try {
+        const mysqlPort = await findMySQLPort();
+
+        const dbConfig = {
+            host: 'localhost',
+            port: mysqlPort,
+            user: 'root',
+            password: '',
+            database: 'homeland',
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        };
+
+        // Create database pool
+        const pool = mysql.createPool(dbConfig);
+
+        // Test the connection
+        await pool.query('SELECT 1');
+
+        return pool;
+    } catch (error) {
+        process.exit(1);
+    }
+}
 
 // Email configuration
 const emailConfig = {
@@ -25,25 +108,25 @@ const emailConfig = {
     }
 };
 
-// Create database pool
-const pool = mysql.createPool(dbConfig);
-
 // Create email transporter
 const transporter = nodemailer.createTransport(emailConfig);
 
 // Verify SMTP connection configuration
-transporter.verify(function (error, success) {
-    if (error) {
-        throw new Error('SMTP connection failed: ' + error.message);
+async function verifySMTP() {
+    try {
+        await transporter.verify();
+        return true;
+    } catch (error) {
+        return false;
     }
-});
+}
 
 // Process email queue
-async function processEmailQueue() {
+async function processEmailQueue(pool) {
     let connection;
     try {
         // Connect to database
-        connection = await mysql.createConnection(dbConfig);
+        connection = await pool.getConnection();
 
         // Get pending emails
         const [emails] = await connection.execute(
@@ -80,16 +163,33 @@ async function processEmailQueue() {
             }
         }
     } catch (error) {
-        throw new Error('Error processing emails: ' + error.message);
     } finally {
         if (connection) {
-            await connection.end();
+            connection.release();
         }
     }
 }
 
-// Process queue every 30 seconds
-setInterval(processEmailQueue, 30000);
+// Main function
+async function main() {
+    try {
+        const pool = await initializeDB();
 
-// Initial processing
-processEmailQueue(); 
+        // Verify SMTP connection
+        if (!await verifySMTP()) {
+            process.exit(1);
+        }
+
+        // Process queue every 30 seconds
+        setInterval(() => processEmailQueue(pool), 30000);
+
+        // Initial processing
+        await processEmailQueue(pool);
+
+    } catch (error) {
+        process.exit(1);
+    }
+}
+
+// Start the service
+main(); 

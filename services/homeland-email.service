@@ -1,0 +1,19 @@
+[Unit]
+Description=Homeland Email Service
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/lampp/htdocs/homeland/services
+ExecStart=/usr/bin/node /opt/lampp/htdocs/homeland/services/index.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=homeland-email
+
+[Install]
+WantedBy=multi-user.target 
