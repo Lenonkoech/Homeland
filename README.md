@@ -55,6 +55,7 @@ A modern and comprehensive real estate management system built with PHP and Node
 - **Nodemailer**: Email sending functionality
 - **SMTP Integration**: Support for multiple email providers
 - **Email Queue**: Asynchronous email processing
+- **PM2**: Process management and auto-restart
 
 ### Security Features
 - **Password Hashing**: Secure password storage
@@ -71,14 +72,15 @@ A modern and comprehensive real estate management system built with PHP and Node
 - XAMPP (recommended for local development)
 - Composer (for PHP dependencies)
 - npm (for Node.js dependencies)
+- PM2 (installed automatically with npm)
 
 ## 🚀 Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/Lenonkoech/homeland.git
-cd homeland
-```
+   ```bash
+   git clone https://github.com/Lenonkoech/homeland.git
+   cd homeland
+   ```
 
 2. Set up the database:
    - Create a new database named `homeland` in phpMyAdmin
@@ -109,20 +111,24 @@ cd homeland
    ```
 
 4. Install dependencies:
-```bash
-# PHP dependencies
-composer install
+   ```bash
+   # PHP dependencies
+   composer install
 
-# Node.js dependencies
-cd services
-npm install
-```
+   # Node.js dependencies and PM2
+   cd services
+   npm run setup
+   ```
 
 5. Start the email service:
-```bash
-cd services
-node index.js
-```
+   ```bash
+   # Start the service
+   npm run pm2:start
+
+   # Enable auto-start on boot
+   pm2 startup
+   pm2 save
+   ```
 
 6. Configure your web server:
    - Point your web server to the project root directory
@@ -144,7 +150,8 @@ homeland/
 ├── js/                  # JavaScript files
 ├── services/            # Node.js services
 │   ├── index.js        # Email service
-│   └── package.json    # Node.js dependencies
+│   ├── package.json    # Node.js dependencies
+│   └── node_modules/   # Installed packages
 ├── user/                # User interface
 ├── .env                 # Environment variables
 └── README.md           # This file
@@ -158,6 +165,56 @@ The system includes a robust email queue system that:
 - Tracks email status and delivery
 - Provides error reporting
 - Supports multiple email templates
+
+### Email Service Management
+
+The email service is managed using PM2, which provides:
+- Automatic process restart on crashes
+- Log management
+- Process monitoring
+- Auto-start on system boot
+
+Available PM2 commands:
+```bash
+# Start the service
+npm run pm2:start
+
+# Stop the service
+npm run pm2:stop
+
+# Restart the service
+npm run pm2:restart
+
+# Remove the service
+npm run pm2:delete
+
+# View logs
+npm run pm2:logs
+
+# Check status
+npm run pm2:status
+```
+
+### Troubleshooting Email Service
+
+If the email service fails to start or function properly:
+
+1. Check service status:
+   ```bash
+   npm run pm2:status
+   ```
+
+2. View service logs:
+   ```bash
+   npm run pm2:logs
+   ```
+
+3. Common issues to check:
+   - Database connection settings in `.env`
+   - SMTP configuration in `.env`
+   - Log file permissions
+   - Node.js and PM2 installation
+   - Port availability
 
 ## 🔒 Security Measures
 

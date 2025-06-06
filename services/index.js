@@ -6,6 +6,12 @@ const fs = require('fs');
 // Load environment variables
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
+// Add at the very top of the file
+process.on('uncaughtException', function (err) {
+    require('fs').appendFileSync('server.log', 'Uncaught Exception: ' + err + '\n');
+    process.exit(1);
+});
+
 // Function to check if MySQL is XAMPP's
 async function isXamppMySQL(connection) {
     try {

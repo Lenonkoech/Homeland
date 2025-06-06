@@ -18,7 +18,22 @@ function isNodeServerRunning() {
 // Function to start Node.js server
 function startNodeServer() {
     $scriptPath = __DIR__ . '/start-server.sh';
-    exec("nohup $scriptPath > /dev/null 2>&1 &");
+    $logFile = __DIR__ . '/start-server.log';
+    
+    // Make sure the script is executable
+    chmod($scriptPath, 0755);
+    
+    // Start the server with full path and logging
+    $command = "cd " . __DIR__ . " && nohup $scriptPath > $logFile 2>&1 &";
+    exec($command, $output, $returnVar);
+    
+    // Log the attempt
+    file_put_contents($logFile, "Attempting to start server at " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
+    file_put_contents($logFile, "Command: $command\n", FILE_APPEND);
+    file_put_contents($logFile, "Return value: $returnVar\n", FILE_APPEND);
+    if (!empty($output)) {
+        file_put_contents($logFile, "Output: " . print_r($output, true) . "\n", FILE_APPEND);
+    }
 }
 
 // Function to check if MySQL is XAMPP's
